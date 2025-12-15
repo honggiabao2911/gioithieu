@@ -19,6 +19,9 @@
       --accent:#1ea7ff;
       --accent2:#2ee6c3;
       --radius:20px;
+
+      /* PRO timing */
+      --bobDur: 2.85s;
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
@@ -37,7 +40,7 @@
     #codeBg{
       position:fixed; inset:0;
       z-index:-3;
-      opacity:.18;
+      opacity:.16;
       filter: blur(.15px);
       pointer-events:none;
     }
@@ -49,7 +52,7 @@
         linear-gradient(to right, rgba(11,27,42,.05) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(11,27,42,.05) 1px, transparent 1px);
       background-size: 70px 70px;
-      opacity:.28;
+      opacity:.24;
       mask-image: radial-gradient(circle at 50% 18%, rgba(0,0,0,1), transparent 70%);
     }
 
@@ -160,7 +163,6 @@
 
     /* ===== PAGE ===== */
     main{max-width:940px;margin:0 auto;padding:18px 14px 70px}
-
     .hero{
       min-height: calc(100vh - 66px);
       display:flex;
@@ -173,13 +175,15 @@
       position:relative;
     }
 
-    /* ===== AVATAR EFFECTS (UPGRADED) ===== */
+    /* ===== PRO WATER AVATAR ===== */
     .avatarWrap{
       position:relative;
-      width:290px;
-      height:290px;
+      width:320px;
+      height:360px;
       display:grid;
       place-items:center;
+      isolation:isolate;
+      transform: translateZ(0);
 
       opacity:0;
       transform: translateY(18px) scale(.96);
@@ -187,79 +191,321 @@
     }
     @keyframes heroIn{to{opacity:1;transform:translateY(0) scale(1)}}
 
-    /* Avatar bobbing (starts AFTER scan) */
-    .avatarWrap{
-      animation:
-        heroIn .9s ease-out forwards,
-        floatBob 2.6s ease-in-out infinite;
-      animation-delay: 0s, 1.15s;
+    /* layer that bobs (avatar + water sync) */
+    .bob{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      animation: bob var(--bobDur) ease-in-out infinite;
+      animation-delay: .95s;
+      will-change: transform;
     }
-    @keyframes floatBob{
-      0%{transform: translateY(0) scale(1)}
-      50%{transform: translateY(-7px) scale(1.008)}
-      100%{transform: translateY(0) scale(1)}
+    @keyframes bob{
+      0%{transform: translateY(0)}
+      35%{transform: translateY(-10px)}
+      55%{transform: translateY(-6px)}
+      100%{transform: translateY(0)}
     }
 
-    /* Water glow behind */
-    .avatarWrap::before{
+    /* water stage */
+    .water{
+      position:absolute;
+      left:50%;
+      bottom:22px;
+      width:420px;
+      height:190px;
+      transform:translateX(-50%);
+      z-index:1;
+      pointer-events:none;
+      filter: saturate(118%);
+    }
+
+    /* base surface (real “mặt nước”) */
+    .waterSurface{
+      position:absolute;
+      left:50%;
+      bottom:0;
+      width:380px;
+      height:140px;
+      transform:translateX(-50%);
+      border-radius:999px;
+
+      background:
+        radial-gradient(closest-side at 50% 40%,
+          rgba(46,230,195,.18) 0%,
+          rgba(30,167,255,.20) 46%,
+          rgba(30,167,255,.10) 70%,
+          transparent 100%),
+        radial-gradient(closest-side at 50% 85%,
+          rgba(11,27,42,.06) 0%,
+          transparent 70%);
+
+      box-shadow:
+        0 30px 90px rgba(30,167,255,.10),
+        0 18px 70px rgba(46,230,195,.08);
+
+      opacity:.98;
+      mask-image: radial-gradient(circle at 50% 58%, rgba(0,0,0,1), transparent 72%);
+    }
+
+    /* moving micro-wave lines (makes it feel like water, not circles) */
+    .waterSurface::after{
       content:"";
       position:absolute;
-      inset:-28px;
-      z-index:-1;
-      border-radius: 999px;
+      inset:0;
+      border-radius:999px;
       background:
-        radial-gradient(circle at 50% 60%, rgba(30,167,255,.26), transparent 56%),
-        radial-gradient(circle at 50% 50%, rgba(46,230,195,.18), transparent 62%);
-      opacity:0;
-      transform: scale(.92);
-      animation: rippleIn .7s ease-out forwards;
-      animation-delay: .75s;
+        repeating-linear-gradient(
+          to right,
+          rgba(255,255,255,.00) 0px,
+          rgba(255,255,255,.00) 12px,
+          rgba(255,255,255,.16) 16px,
+          rgba(255,255,255,.00) 26px
+        ),
+        repeating-linear-gradient(
+          to right,
+          rgba(255,255,255,.00) 0px,
+          rgba(255,255,255,.00) 18px,
+          rgba(255,255,255,.10) 22px,
+          rgba(255,255,255,.00) 34px
+        );
+      opacity:.18;
+      filter: blur(1.5px);
+      animation: waveDrift 5.3s linear infinite;
+      mask-image: radial-gradient(circle at 50% 52%, rgba(0,0,0,1), transparent 68%);
+      transform: translateX(-18px);
+    }
+    @keyframes waveDrift{
+      0%{transform: translateX(-18px)}
+      100%{transform: translateX(18px)}
     }
 
-    /* Ripple rings (loop) */
-    .avatarWrap::after{
-      content:"";
+    /* specular highlight sweep (light on water) */
+    .specular{
       position:absolute;
-      inset:-54px;
-      z-index:-1;
-      border-radius: 999px;
+      left:50%;
+      bottom:44px;
+      width:320px;
+      height:86px;
+      transform:translateX(-50%);
+      border-radius:999px;
       background:
-        radial-gradient(circle, rgba(30,167,255,.22) 0 18%, transparent 19% 100%),
-        radial-gradient(circle, rgba(46,230,195,.16) 0 30%, transparent 31% 100%),
-        radial-gradient(circle, rgba(30,167,255,.12) 0 42%, transparent 43% 100%);
+        linear-gradient(90deg,
+          transparent 0%,
+          rgba(255,255,255,.22) 28%,
+          rgba(255,255,255,.06) 52%,
+          transparent 78%);
+      opacity:.42;
+      filter: blur(7px);
+      animation: specMove 4.2s ease-in-out infinite;
+      mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,1), transparent 70%);
+    }
+    @keyframes specMove{
+      0%{transform:translateX(-50%) translateX(-10px) skewX(-10deg); opacity:.30}
+      50%{transform:translateX(-50%) translateX(10px) skewX(10deg); opacity:.55}
+      100%{transform:translateX(-50%) translateX(-10px) skewX(-10deg); opacity:.30}
+    }
+
+    /* impact point (touch point under avatar) */
+    .impact{
+      position:absolute;
+      left:50%;
+      bottom:62px; /* sits a bit above surface */
+      width:28px;
+      height:28px;
+      transform:translateX(-50%);
+      border-radius:50%;
+      background: radial-gradient(circle,
+        rgba(46,230,195,.95) 0%,
+        rgba(30,167,255,.70) 38%,
+        transparent 72%
+      );
+      opacity:.0;
+      filter: blur(1px);
+      animation: impactBeat var(--bobDur) ease-in-out infinite;
+      animation-delay: .95s;
+      z-index:3;
+    }
+    @keyframes impactBeat{
+      0%, 55%, 100% {opacity:0; transform:translateX(-50%) scale(.85)}
+      68%{opacity:1; transform:translateX(-50%) scale(1.15)} /* splash moment */
+      82%{opacity:.4; transform:translateX(-50%) scale(1.00)}
+    }
+
+    /* ripple rings (spawn on “splash moment”) */
+    .ripple{
+      position:absolute;
+      left:50%;
+      bottom:28px;
+      width:260px;
+      height:78px;
+      transform:translateX(-50%);
+      border-radius:999px;
+      z-index:2;
       opacity:0;
-      transform: scale(.95);
-      animation:
-        rippleIn .7s ease-out forwards,
-        rippleLoop 2.9s ease-in-out infinite;
-      animation-delay: .95s, 1.20s;
-      mask-image: radial-gradient(circle at 50% 60%, rgba(0,0,0,1), transparent 74%);
-      filter: blur(.2px);
+      filter: blur(.15px);
+
+      background:
+        radial-gradient(closest-side at 50% 50%,
+          transparent 58%,
+          rgba(30,167,255,.62) 59%,
+          transparent 62%),
+        radial-gradient(closest-side at 50% 50%,
+          transparent 74%,
+          rgba(46,230,195,.44) 75%,
+          transparent 78%);
+      mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,1), transparent 72%);
+      will-change: transform, opacity;
     }
 
-    @keyframes rippleIn{
-      to{opacity:1; transform: scale(1);}
-    }
-    @keyframes rippleLoop{
-      0%{opacity:.55; transform: scale(.96)}
-      50%{opacity:.95; transform: scale(1.05)}
-      100%{opacity:.55; transform: scale(.96)}
+    .r1{animation: ripplePulse var(--bobDur) ease-in-out infinite; animation-delay:.95s;}
+    .r2{animation: ripplePulse var(--bobDur) ease-in-out infinite; animation-delay: .95s;}
+    .r3{animation: ripplePulse var(--bobDur) ease-in-out infinite; animation-delay: .95s;}
+
+    /* different starting scales so it feels layered */
+    .r2{transform:translateX(-50%) scale(1.14); opacity:0}
+    .r3{transform:translateX(-50%) scale(1.30); opacity:0}
+
+    @keyframes ripplePulse{
+      0%, 58%{opacity:0; transform:translateX(-50%) scale(.90)}
+      68%{opacity:.92; transform:translateX(-50%) scale(1.00)}
+      80%{opacity:.55; transform:translateX(-50%) scale(1.12)}
+      100%{opacity:0; transform:translateX(-50%) scale(1.22)}
     }
 
-    /* The avatar card */
+    /* extra thin ripples (fine lines) */
+    .fine{
+      position:absolute;
+      left:50%;
+      bottom:22px;
+      width:300px;
+      height:95px;
+      transform:translateX(-50%);
+      border-radius:999px;
+      opacity:0;
+      z-index:2;
+      background:
+        radial-gradient(closest-side at 50% 50%,
+          transparent 64%,
+          rgba(255,255,255,.28) 65%,
+          transparent 66%),
+        radial-gradient(closest-side at 50% 50%,
+          transparent 82%,
+          rgba(255,255,255,.18) 83%,
+          transparent 84%);
+      filter: blur(.35px);
+      mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,1), transparent 74%);
+      animation: finePulse var(--bobDur) ease-in-out infinite;
+      animation-delay: .95s;
+    }
+    @keyframes finePulse{
+      0%, 60%{opacity:0; transform:translateX(-50%) scale(.92)}
+      70%{opacity:.65; transform:translateX(-50%) scale(1.02)}
+      86%{opacity:.28; transform:translateX(-50%) scale(1.14)}
+      100%{opacity:0; transform:translateX(-50%) scale(1.22)}
+    }
+
+    /* droplets (tiny splash particles) */
+    .droplets{
+      position:absolute;
+      left:50%;
+      bottom:78px;
+      width:220px;
+      height:120px;
+      transform:translateX(-50%);
+      z-index:4;
+      pointer-events:none;
+    }
+    .drop{
+      position:absolute;
+      left:50%;
+      bottom:0;
+      width:8px;height:8px;border-radius:50%;
+      background: radial-gradient(circle, rgba(255,255,255,.9), rgba(46,230,195,.55) 45%, transparent 70%);
+      filter: blur(.15px);
+      opacity:0;
+    }
+
+    /* each drop has its own path; all timed to splash moment (≈ 68%) */
+    .d1{animation: drop1 var(--bobDur) ease-in-out infinite; animation-delay:.95s;}
+    .d2{animation: drop2 var(--bobDur) ease-in-out infinite; animation-delay:.95s;}
+    .d3{animation: drop3 var(--bobDur) ease-in-out infinite; animation-delay:.95s;}
+    .d4{animation: drop4 var(--bobDur) ease-in-out infinite; animation-delay:.95s;}
+
+    @keyframes drop1{
+      0%, 64%{opacity:0; transform:translate(-50%,0) scale(.6)}
+      68%{opacity:.9; transform:translate(calc(-50% - 22px), -10px) scale(1)}
+      78%{opacity:.7; transform:translate(calc(-50% - 38px), -40px) scale(.85)}
+      92%{opacity:0; transform:translate(calc(-50% - 48px), -20px) scale(.7)}
+      100%{opacity:0; transform:translate(-50%,0) scale(.6)}
+    }
+    @keyframes drop2{
+      0%, 64%{opacity:0; transform:translate(-50%,0) scale(.6)}
+      68%{opacity:.95; transform:translate(calc(-50% + 8px), -14px) scale(1)}
+      80%{opacity:.7; transform:translate(calc(-50% + 18px), -52px) scale(.82)}
+      92%{opacity:0; transform:translate(calc(-50% + 26px), -26px) scale(.7)}
+      100%{opacity:0; transform:translate(-50%,0) scale(.6)}
+    }
+    @keyframes drop3{
+      0%, 64%{opacity:0; transform:translate(-50%,0) scale(.6)}
+      68%{opacity:.85; transform:translate(calc(-50% + 30px), -8px) scale(1)}
+      78%{opacity:.6; transform:translate(calc(-50% + 48px), -36px) scale(.82)}
+      90%{opacity:0; transform:translate(calc(-50% + 60px), -18px) scale(.7)}
+      100%{opacity:0; transform:translate(-50%,0) scale(.6)}
+    }
+    @keyframes drop4{
+      0%, 64%{opacity:0; transform:translate(-50%,0) scale(.6)}
+      68%{opacity:.75; transform:translate(calc(-50% - 6px), -6px) scale(1)}
+      82%{opacity:.5; transform:translate(calc(-50% - 10px), -32px) scale(.8)}
+      92%{opacity:0; transform:translate(calc(-50% - 12px), -16px) scale(.7)}
+      100%{opacity:0; transform:translate(-50%,0) scale(.6)}
+    }
+
+    /* Avatar card */
     .avatar{
       width:270px; height:270px;
       border-radius:34px;
-      background: #fff;
+      background:#fff;
       border:1px solid rgba(25,60,90,.14);
-      box-shadow: 0 24px 70px rgba(30,167,255,.16), var(--shadow);
+      box-shadow: 0 24px 70px rgba(30,167,255,.18), var(--shadow);
       overflow:hidden;
       position:relative;
       transform: translateZ(0);
+      z-index:5;
     }
     .avatar img{width:100%;height:100%;object-fit:cover;display:block}
 
-    /* ===== HORIZONTAL SCAN LINE (ONE TIME) ===== */
+    /* enter shine streak (one-time) + hover retrigger */
+    .avatar::before{
+      content:"";
+      position:absolute;
+      top:-40%;
+      left:-90%;
+      width:55%;
+      height:190%;
+      transform: rotate(18deg);
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255,255,255,.00) 20%,
+        rgba(255,255,255,.58) 50%,
+        rgba(255,255,255,.00) 80%,
+        transparent 100%);
+      opacity:0;
+      filter: blur(1px);
+      mix-blend-mode: soft-light;
+      pointer-events:none;
+      animation: shineEnter .95s ease-out forwards;
+      animation-delay: .50s;
+    }
+    @keyframes shineEnter{
+      0%{left:-95%; opacity:0}
+      18%{opacity:1}
+      100%{left:135%; opacity:0}
+    }
+    .avatar:hover::before{animation: shineEnter .95s ease-out forwards;}
+
+    /* scan line (one time) */
     .scan{
       position:absolute;
       left:-30%;
@@ -287,15 +533,19 @@
       100%{opacity:0; top:110%}
     }
 
-    /* NAME + SUBTITLE */
+    /* ===== NAME + SUBTITLE ===== */
     .name{
       font-size: clamp(38px, 7.2vw, 58px);
-      line-height:1.05;
+      line-height: 1.2;
+      padding: 6px 10px;
+      margin-top: 6px;
       font-weight:900;
       background: linear-gradient(90deg, var(--accent), var(--accent2));
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
+      overflow: visible;
+      display: inline-block;
 
       opacity:0;
       transform: translateY(14px);
@@ -307,7 +557,6 @@
       color:var(--muted);
       line-height:1.65;
       max-width:740px;
-
       opacity:0;
       transform: translateY(14px);
       animation: heroText .75s ease-out forwards;
@@ -462,9 +711,7 @@
 </head>
 
 <body>
-  <!-- code running background -->
   <canvas id="codeBg"></canvas>
-
   <div class="bg-grid"></div>
 
   <header id="hdr">
@@ -493,9 +740,32 @@
 
   <section class="hero" id="home">
     <div class="avatarWrap">
-      <div class="avatar">
-        <img src="avatar.jpg" alt="Avatar" />
-        <div class="scan"></div>
+      <div class="bob">
+        <!-- WATER -->
+        <div class="water" aria-hidden="true">
+          <div class="waterSurface"></div>
+          <div class="specular"></div>
+
+          <div class="ripple r1"></div>
+          <div class="ripple r2"></div>
+          <div class="ripple r3"></div>
+          <div class="fine"></div>
+
+          <div class="impact"></div>
+
+          <div class="droplets">
+            <span class="drop d1"></span>
+            <span class="drop d2"></span>
+            <span class="drop d3"></span>
+            <span class="drop d4"></span>
+          </div>
+        </div>
+
+        <!-- AVATAR -->
+        <div class="avatar">
+          <img src="avatar.jpg" alt="Avatar" />
+          <div class="scan"></div>
+        </div>
       </div>
     </div>
 
@@ -634,7 +904,7 @@
         <div class="btns">
           <a class="btn primary" target="_blank" rel="noopener" href="https://ispace.edu.vn/">🌐 Website iSPACE</a>
           <a class="btn" target="_blank" rel="noopener"
-             href="https://www.google.com/maps/search/?api=1&query=Tr%C6%B0%E1%BB%9Dng%20Cao%20%C4%91%E1%BA%B3ng%20An%20ninh%20m%E1%BA%A1ng%20iSPACE">🧭 Google Maps</a>
+             href="https://www.google.com/maps/search/?api=1&query=Tr%C6%B0%E1%BB%9Dng%20Cao%20%C4%91%E1%BA%A3ng%20An%20ninh%20m%E1%BA%A1ng%20iSPACE">🧭 Google Maps</a>
         </div>
       </div>
     </section>
@@ -704,7 +974,6 @@
     resize();
 
     function tick(){
-      // fade trail
       ctx.fillStyle = "rgba(247, 251, 255, 0.08)";
       ctx.fillRect(0, 0, w, h);
 
@@ -713,8 +982,7 @@
         const x = i * fontSize;
         const y = drops[i];
 
-        // cyan-ish text (no need to set CSS)
-        ctx.fillStyle = "rgba(30,167,255,0.55)";
+        ctx.fillStyle = "rgba(30,167,255,0.52)";
         ctx.fillText(ch, x, y);
 
         drops[i] += fontSize * (0.95 + Math.random()*0.55);
