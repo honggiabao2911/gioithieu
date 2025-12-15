@@ -11,17 +11,15 @@
       --bg2:#eef6ff;
       --text:#0b1b2a;
       --muted:rgba(11,27,42,.72);
-
       --card:rgba(255,255,255,.84);
       --line:rgba(25,60,90,.14);
       --shadow: 0 18px 45px rgba(10,30,50,.12);
-
       --accent:#1ea7ff;
       --accent2:#2ee6c3;
       --radius:20px;
-
-      /* PRO timing */
-      --bobDur: 2.85s;
+      
+      /* Tốc độ nhịp đập */
+      --bobDur: 2s; 
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
@@ -36,16 +34,11 @@
       overflow-x:hidden;
     }
 
-    /* ====== CODE BACKGROUND (CANVAS) ====== */
+    /* CODE BACKGROUND */
     #codeBg{
-      position:fixed; inset:0;
-      z-index:-3;
-      opacity:.16;
-      filter: blur(.15px);
-      pointer-events:none;
+      position:fixed; inset:0; z-index:-3;
+      opacity:.16; filter: blur(.15px); pointer-events:none;
     }
-
-    /* Subtle grid */
     .bg-grid{
       position:fixed; inset:0; z-index:-2; pointer-events:none;
       background-image:
@@ -56,7 +49,7 @@
       mask-image: radial-gradient(circle at 50% 18%, rgba(0,0,0,1), transparent 70%);
     }
 
-    /* ===== NAVBAR ===== */
+    /* NAV */
     header{
       position:sticky; top:0; z-index:50;
       backdrop-filter: blur(12px);
@@ -64,19 +57,11 @@
       border-bottom:1px solid rgba(25,60,90,.10);
     }
     .nav{
-      max-width: 980px;
-      margin:0 auto;
-      padding:10px 14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
+      max-width: 980px; margin:0 auto; padding:10px 14px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
     .brand{
-      display:flex; align-items:center; gap:10px;
-      font-weight:900;
-      letter-spacing:.2px;
-      white-space:nowrap;
+      display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.2px; white-space:nowrap;
     }
     .brand .mark{
       width:34px;height:34px;border-radius:14px;
@@ -84,595 +69,246 @@
       border:1px solid rgba(25,60,90,.12);
       display:grid; place-items:center;
       box-shadow: 0 12px 28px rgba(30,167,255,.12);
-      font-weight:900;
-      color: rgba(11,27,42,.88);
+      font-weight:900; color: rgba(11,27,42,.88);
     }
-    nav ul{
-      list-style:none;
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
+    nav ul{list-style:none; display:flex; gap:8px;}
     nav a{
-      text-decoration:none;
-      color: rgba(11,27,42,.78);
-      font-weight:800;
-      font-size:14px;
-      padding:9px 10px;
-      border-radius:14px;
-      border:1px solid transparent;
-      transition:.18s ease;
-      white-space:nowrap;
+      text-decoration:none; color: rgba(11,27,42,.78); font-weight:800; font-size:14px;
+      padding:9px 10px; border-radius:14px; border:1px solid transparent; transition:.18s ease; white-space:nowrap;
     }
-    nav a:hover{
-      background: rgba(30,167,255,.10);
-      border-color: rgba(25,60,90,.10);
-      color: rgba(11,27,42,.92);
-    }
-    nav a.active{
-      background: linear-gradient(135deg, rgba(30,167,255,.18), rgba(46,230,195,.14));
-      border-color: rgba(25,60,90,.10);
-      color: rgba(11,27,42,.95);
-    }
+    nav a:hover{background: rgba(30,167,255,.10); border-color: rgba(25,60,90,.10); color: rgba(11,27,42,.92);}
+    nav a.active{background: linear-gradient(135deg, rgba(30,167,255,.18), rgba(46,230,195,.14)); border-color: rgba(25,60,90,.10); color: rgba(11,27,42,.95);}
     .nav-right{display:flex; align-items:center; gap:10px}
     .cta{
-      text-decoration:none;
-      display:inline-flex; align-items:center; gap:10px;
-      padding:10px 12px;
-      border-radius:999px;
-      font-weight:900;
-      color: rgba(11,27,42,.92);
-      background: linear-gradient(90deg, rgba(30,167,255,.20), rgba(46,230,195,.18));
-      border:1px solid rgba(25,60,90,.12);
-      box-shadow: 0 14px 34px rgba(30,167,255,.12);
-      transition:.18s ease;
-      white-space:nowrap;
+      text-decoration:none; display:inline-flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:999px; font-weight:900;
+      color: rgba(11,27,42,.92); background: linear-gradient(90deg, rgba(30,167,255,.20), rgba(46,230,195,.18));
+      border:1px solid rgba(25,60,90,.12); box-shadow: 0 14px 34px rgba(30,167,255,.12);
+      transition:.18s ease; white-space:nowrap;
     }
     .cta:hover{transform: translateY(-1px)}
     .hamburger{
-      display:none;
-      width:42px;height:42px;border-radius:14px;
-      border:1px solid rgba(25,60,90,.12);
-      background: rgba(255,255,255,.75);
-      box-shadow: 0 10px 24px rgba(10,30,50,.08);
-      cursor:pointer;
-      font-size:18px;
-      font-weight:900;
+      display:none; width:42px;height:42px;border-radius:14px;
+      border:1px solid rgba(25,60,90,.12); background: rgba(255,255,255,.75);
+      box-shadow: 0 10px 24px rgba(10,30,50,.08); cursor:pointer; font-size:18px; font-weight:900;
     }
     @media (max-width: 820px){
-      nav{display:none}
-      .hamburger{display:inline-grid; place-items:center}
+      nav{display:none} .hamburger{display:inline-grid; place-items:center}
       header.open nav{
-        display:block;
-        position:absolute;
-        left:0; right:0;
-        top:100%;
-        background: rgba(247,251,255,.92);
-        border-bottom:1px solid rgba(25,60,90,.10);
-        backdrop-filter: blur(12px);
+        display:block; position:absolute; left:0; right:0; top:100%;
+        background: rgba(247,251,255,.92); border-bottom:1px solid rgba(25,60,90,.10); backdrop-filter: blur(12px);
       }
-      header.open nav ul{
-        flex-direction:column;
-        align-items:stretch;
-        padding:10px 14px 14px;
-        gap:6px;
-      }
+      header.open nav ul{flex-direction:column; padding:10px 14px 14px; gap:6px;}
       header.open nav a{display:block}
-      header.open .nav{position:relative}
     }
 
-    /* ===== PAGE ===== */
+    /* ===== HERO ===== */
     main{max-width:940px;margin:0 auto;padding:18px 14px 70px}
     .hero{
-      min-height: calc(100vh - 66px);
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      text-align:center;
-      gap:14px;
-      padding:24px 14px 28px;
-      position:relative;
+      min-height: calc(100vh - 66px); display:flex; flex-direction:column;
+      justify-content:center; align-items:center; text-align:center; gap:14px;
+      padding:24px 14px 28px; position:relative;
     }
 
-    /* ===== PRO WATER AVATAR ===== */
+    /* CONTAINER */
     .avatarWrap{
-      position:relative;
-      width:320px;
-      height:360px;
-      display:grid;
-      place-items:center;
-      isolation:isolate;
-      transform: translateZ(0);
-
-      opacity:0;
-      transform: translateY(18px) scale(.96);
-      animation: heroIn .9s ease-out forwards;
+      position:relative; width:340px; height:380px;
+      display:grid; place-items:center; isolation:isolate;
+      opacity:0; transform: translateY(18px); animation: heroIn .9s ease-out forwards;
     }
-    @keyframes heroIn{to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes heroIn{to{opacity:1;transform:translateY(0)}}
 
-    /* layer that bobs (avatar + water sync) */
+    /* NHỊP NHÚN (Bobbing) */
     .bob{
-      position:absolute;
-      inset:0;
-      display:grid;
-      place-items:center;
-      animation: bob var(--bobDur) ease-in-out infinite;
-      animation-delay: .95s;
-      will-change: transform;
+      position:absolute; inset:0; display:grid; place-items:center;
+      /* Nhún mạnh hơn để tạo lực đập xuống nước */
+      animation: bob var(--bobDur) cubic-bezier(0.45, 0, 0.55, 1) infinite;
     }
     @keyframes bob{
-      0%{transform: translateY(0)}
-      35%{transform: translateY(-10px)}
-      55%{transform: translateY(-6px)}
-      100%{transform: translateY(0)}
+      0%, 100%{transform: translateY(0)}
+      50%{transform: translateY(-15px)} /* Lên cao hơn */
     }
 
-    /* water stage */
+    /* MẶT NƯỚC (Water Surface) */
     .water{
-      position:absolute;
-      left:50%;
-      bottom:22px;
-      width:420px;
-      height:190px;
-      transform:translateX(-50%);
-      z-index:1;
-      pointer-events:none;
-      filter: saturate(118%);
+      position:absolute; left:50%; bottom:30px;
+      width:380px; height:140px; transform:translateX(-50%);
+      z-index:1; pointer-events:none;
+    }
+    .surface{
+      position:absolute; inset:0; border-radius:50%;
+      /* Màu đậm hơn để sóng trắng nổi lên */
+      background: radial-gradient(closest-side, rgba(30,167,255,0.25), rgba(46,230,195,0.1) 80%, transparent 100%);
+      border: 1px solid rgba(30,167,255,0.1);
+      box-shadow: 0 0 30px rgba(30,167,255,0.15);
+      transform: scaleX(1);
+      /* Mặt nước co giãn theo nhịp */
+      animation: surfaceBeat var(--bobDur) ease-in-out infinite;
+    }
+    @keyframes surfaceBeat {
+        0%, 100% { transform: scale(1); opacity:1; }
+        50% { transform: scale(0.95); opacity:0.8; }
     }
 
-    /* base surface (real “mặt nước”) */
-    .waterSurface{
-      position:absolute;
-      left:50%;
-      bottom:0;
-      width:380px;
-      height:140px;
-      transform:translateX(-50%);
-      border-radius:999px;
-
-      background:
-        radial-gradient(closest-side at 50% 40%,
-          rgba(46,230,195,.18) 0%,
-          rgba(30,167,255,.20) 46%,
-          rgba(30,167,255,.10) 70%,
-          transparent 100%),
-        radial-gradient(closest-side at 50% 85%,
-          rgba(11,27,42,.06) 0%,
-          transparent 70%);
-
-      box-shadow:
-        0 30px 90px rgba(30,167,255,.10),
-        0 18px 70px rgba(46,230,195,.08);
-
-      opacity:.98;
-      mask-image: radial-gradient(circle at 50% 58%, rgba(0,0,0,1), transparent 72%);
-    }
-
-    /* moving micro-wave lines (makes it feel like water, not circles) */
-    .waterSurface::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:999px;
-      background:
-        repeating-linear-gradient(
-          to right,
-          rgba(255,255,255,.00) 0px,
-          rgba(255,255,255,.00) 12px,
-          rgba(255,255,255,.16) 16px,
-          rgba(255,255,255,.00) 26px
-        ),
-        repeating-linear-gradient(
-          to right,
-          rgba(255,255,255,.00) 0px,
-          rgba(255,255,255,.00) 18px,
-          rgba(255,255,255,.10) 22px,
-          rgba(255,255,255,.00) 34px
-        );
-      opacity:.18;
-      filter: blur(1.5px);
-      animation: waveDrift 5.3s linear infinite;
-      mask-image: radial-gradient(circle at 50% 52%, rgba(0,0,0,1), transparent 68%);
-      transform: translateX(-18px);
-    }
-    @keyframes waveDrift{
-      0%{transform: translateX(-18px)}
-      100%{transform: translateX(18px)}
-    }
-
-    /* specular highlight sweep (light on water) */
-    .specular{
-      position:absolute;
-      left:50%;
-      bottom:44px;
-      width:320px;
-      height:86px;
-      transform:translateX(-50%);
-      border-radius:999px;
-      background:
-        linear-gradient(90deg,
-          transparent 0%,
-          rgba(255,255,255,.22) 28%,
-          rgba(255,255,255,.06) 52%,
-          transparent 78%);
-      opacity:.42;
-      filter: blur(7px);
-      animation: specMove 4.2s ease-in-out infinite;
-      mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,1), transparent 70%);
-    }
-    @keyframes specMove{
-      0%{transform:translateX(-50%) translateX(-10px) skewX(-10deg); opacity:.30}
-      50%{transform:translateX(-50%) translateX(10px) skewX(10deg); opacity:.55}
-      100%{transform:translateX(-50%) translateX(-10px) skewX(-10deg); opacity:.30}
-    }
-
-    /* impact point (touch point under avatar) */
-    .impact{
-      position:absolute;
-      left:50%;
-      bottom:62px; /* sits a bit above surface */
-      width:28px;
-      height:28px;
-      transform:translateX(-50%);
-      border-radius:50%;
-      background: radial-gradient(circle,
-        rgba(46,230,195,.95) 0%,
-        rgba(30,167,255,.70) 38%,
-        transparent 72%
-      );
-      opacity:.0;
-      filter: blur(1px);
-      animation: impactBeat var(--bobDur) ease-in-out infinite;
-      animation-delay: .95s;
-      z-index:3;
-    }
-    @keyframes impactBeat{
-      0%, 55%, 100% {opacity:0; transform:translateX(-50%) scale(.85)}
-      68%{opacity:1; transform:translateX(-50%) scale(1.15)} /* splash moment */
-      82%{opacity:.4; transform:translateX(-50%) scale(1.00)}
-    }
-
-    /* ripple rings (spawn on “splash moment”) */
+    /* SÓNG (Ripples) - CÁC VÒNG TRÒN */
     .ripple{
-      position:absolute;
-      left:50%;
-      bottom:28px;
-      width:260px;
-      height:78px;
-      transform:translateX(-50%);
-      border-radius:999px;
-      z-index:2;
+      position:absolute; left:50%; top:50%;
+      width:100%; height:100%;
+      transform:translate(-50%, -50%) scale(0.2);
+      border-radius:50%;
+      border: 2px solid rgba(255, 255, 255, 0.8); /* Viền trắng rõ */
       opacity:0;
-      filter: blur(.15px);
-
-      background:
-        radial-gradient(closest-side at 50% 50%,
-          transparent 58%,
-          rgba(30,167,255,.62) 59%,
-          transparent 62%),
-        radial-gradient(closest-side at 50% 50%,
-          transparent 74%,
-          rgba(46,230,195,.44) 75%,
-          transparent 78%);
-      mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,1), transparent 72%);
-      will-change: transform, opacity;
-    }
-
-    .r1{animation: ripplePulse var(--bobDur) ease-in-out infinite; animation-delay:.95s;}
-    .r2{animation: ripplePulse var(--bobDur) ease-in-out infinite; animation-delay: .95s;}
-    .r3{animation: ripplePulse var(--bobDur) ease-in-out infinite; animation-delay: .95s;}
-
-    /* different starting scales so it feels layered */
-    .r2{transform:translateX(-50%) scale(1.14); opacity:0}
-    .r3{transform:translateX(-50%) scale(1.30); opacity:0}
-
-    @keyframes ripplePulse{
-      0%, 58%{opacity:0; transform:translateX(-50%) scale(.90)}
-      68%{opacity:.92; transform:translateX(-50%) scale(1.00)}
-      80%{opacity:.55; transform:translateX(-50%) scale(1.12)}
-      100%{opacity:0; transform:translateX(-50%) scale(1.22)}
-    }
-
-    /* extra thin ripples (fine lines) */
-    .fine{
-      position:absolute;
-      left:50%;
-      bottom:22px;
-      width:300px;
-      height:95px;
-      transform:translateX(-50%);
-      border-radius:999px;
-      opacity:0;
-      z-index:2;
-      background:
-        radial-gradient(closest-side at 50% 50%,
-          transparent 64%,
-          rgba(255,255,255,.28) 65%,
-          transparent 66%),
-        radial-gradient(closest-side at 50% 50%,
-          transparent 82%,
-          rgba(255,255,255,.18) 83%,
-          transparent 84%);
-      filter: blur(.35px);
-      mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,1), transparent 74%);
-      animation: finePulse var(--bobDur) ease-in-out infinite;
-      animation-delay: .95s;
-    }
-    @keyframes finePulse{
-      0%, 60%{opacity:0; transform:translateX(-50%) scale(.92)}
-      70%{opacity:.65; transform:translateX(-50%) scale(1.02)}
-      86%{opacity:.28; transform:translateX(-50%) scale(1.14)}
-      100%{opacity:0; transform:translateX(-50%) scale(1.22)}
-    }
-
-    /* droplets (tiny splash particles) */
-    .droplets{
-      position:absolute;
-      left:50%;
-      bottom:78px;
-      width:220px;
-      height:120px;
-      transform:translateX(-50%);
-      z-index:4;
+      box-shadow: 0 0 10px rgba(30,167,255, 0.5); /* Phát sáng nhẹ */
       pointer-events:none;
     }
-    .drop{
-      position:absolute;
-      left:50%;
-      bottom:0;
-      width:8px;height:8px;border-radius:50%;
-      background: radial-gradient(circle, rgba(255,255,255,.9), rgba(46,230,195,.55) 45%, transparent 70%);
-      filter: blur(.15px);
-      opacity:0;
+    
+    /* Animation cho sóng bung ra */
+    .r1{ animation: rippleSpread var(--bobDur) linear infinite; animation-delay: 1.0s; }
+    .r2{ animation: rippleSpread var(--bobDur) linear infinite; animation-delay: 1.2s; }
+    .r3{ animation: rippleSpread var(--bobDur) linear infinite; animation-delay: 1.4s; }
+
+    /* Note: Avatar chạm đáy ở khoảng 0% và 100% của chu kỳ bob, nhưng delay chỉnh để khớp */
+    @keyframes rippleSpread {
+      0% { transform:translate(-50%, -50%) scale(0.2); opacity:0; border-width:3px; }
+      10% { opacity:1; } /* Hiện nhanh */
+      100% { transform:translate(-50%, -50%) scale(1.4); opacity:0; border-width:0px; }
     }
 
-    /* each drop has its own path; all timed to splash moment (≈ 68%) */
-    .d1{animation: drop1 var(--bobDur) ease-in-out infinite; animation-delay:.95s;}
-    .d2{animation: drop2 var(--bobDur) ease-in-out infinite; animation-delay:.95s;}
-    .d3{animation: drop3 var(--bobDur) ease-in-out infinite; animation-delay:.95s;}
-    .d4{animation: drop4 var(--bobDur) ease-in-out infinite; animation-delay:.95s;}
-
-    @keyframes drop1{
-      0%, 64%{opacity:0; transform:translate(-50%,0) scale(.6)}
-      68%{opacity:.9; transform:translate(calc(-50% - 22px), -10px) scale(1)}
-      78%{opacity:.7; transform:translate(calc(-50% - 38px), -40px) scale(.85)}
-      92%{opacity:0; transform:translate(calc(-50% - 48px), -20px) scale(.7)}
-      100%{opacity:0; transform:translate(-50%,0) scale(.6)}
-    }
-    @keyframes drop2{
-      0%, 64%{opacity:0; transform:translate(-50%,0) scale(.6)}
-      68%{opacity:.95; transform:translate(calc(-50% + 8px), -14px) scale(1)}
-      80%{opacity:.7; transform:translate(calc(-50% + 18px), -52px) scale(.82)}
-      92%{opacity:0; transform:translate(calc(-50% + 26px), -26px) scale(.7)}
-      100%{opacity:0; transform:translate(-50%,0) scale(.6)}
-    }
-    @keyframes drop3{
-      0%, 64%{opacity:0; transform:translate(-50%,0) scale(.6)}
-      68%{opacity:.85; transform:translate(calc(-50% + 30px), -8px) scale(1)}
-      78%{opacity:.6; transform:translate(calc(-50% + 48px), -36px) scale(.82)}
-      90%{opacity:0; transform:translate(calc(-50% + 60px), -18px) scale(.7)}
-      100%{opacity:0; transform:translate(-50%,0) scale(.6)}
-    }
-    @keyframes drop4{
-      0%, 64%{opacity:0; transform:translate(-50%,0) scale(.6)}
-      68%{opacity:.75; transform:translate(calc(-50% - 6px), -6px) scale(1)}
-      82%{opacity:.5; transform:translate(calc(-50% - 10px), -32px) scale(.8)}
-      92%{opacity:0; transform:translate(calc(-50% - 12px), -16px) scale(.7)}
-      100%{opacity:0; transform:translate(-50%,0) scale(.6)}
-    }
-
-    /* Avatar card */
+    /* AVATAR CARD */
     .avatar{
-      width:270px; height:270px;
-      border-radius:34px;
+      width:260px; height:260px; border-radius:34px;
       background:#fff;
       border:1px solid rgba(25,60,90,.14);
-      box-shadow: 0 24px 70px rgba(30,167,255,.18), var(--shadow);
-      overflow:hidden;
-      position:relative;
-      transform: translateZ(0);
+      box-shadow: 0 24px 70px rgba(30,167,255,.25), var(--shadow);
+      overflow:hidden; position:relative;
       z-index:5;
     }
     .avatar img{width:100%;height:100%;object-fit:cover;display:block}
 
-    /* enter shine streak (one-time) + hover retrigger */
-    .avatar::before{
-      content:"";
-      position:absolute;
-      top:-40%;
-      left:-90%;
-      width:55%;
-      height:190%;
-      transform: rotate(18deg);
-      background: linear-gradient(90deg,
-        transparent 0%,
-        rgba(255,255,255,.00) 20%,
-        rgba(255,255,255,.58) 50%,
-        rgba(255,255,255,.00) 80%,
-        transparent 100%);
+    /* HIỆU ỨNG VIỀN SÁNG NGANG (Scanning Line) */
+    .scan-line{
+      position:absolute; left:-20%; right:-20%; height:3px;
+      background: #fff;
+      box-shadow: 
+        0 0 4px #fff, 
+        0 0 15px var(--accent),
+        0 0 30px var(--accent2);
       opacity:0;
-      filter: blur(1px);
-      mix-blend-mode: soft-light;
-      pointer-events:none;
-      animation: shineEnter .95s ease-out forwards;
-      animation-delay: .50s;
-    }
-    @keyframes shineEnter{
-      0%{left:-95%; opacity:0}
-      18%{opacity:1}
-      100%{left:135%; opacity:0}
-    }
-    .avatar:hover::before{animation: shineEnter .95s ease-out forwards;}
-
-    /* scan line (one time) */
-    .scan{
-      position:absolute;
-      left:-30%;
-      right:-30%;
-      height:26px;
-      top:-20%;
-      opacity:0;
-      background: linear-gradient(90deg,
-        transparent 0%,
-        rgba(255,255,255,.0) 30%,
-        rgba(255,255,255,.75) 50%,
-        rgba(255,255,255,.0) 70%,
-        transparent 100%
-      );
-      filter: blur(.2px);
-      mix-blend-mode: soft-light;
-      animation: scanDown 1.05s ease-out forwards;
-      animation-delay: .25s;
-      pointer-events:none;
+      top:-10%;
+      transform: rotate(-5deg); /* Hơi nghiêng cho nghệ */
+      animation: scanDown 2s ease-out forwards; /* Chạy 1 lần khi load */
+      animation-delay: 0.8s;
+      z-index: 10;
+      pointer-events: none;
     }
     @keyframes scanDown{
-      0%{opacity:0; top:-22%}
-      10%{opacity:.95}
-      70%{opacity:.55}
-      100%{opacity:0; top:110%}
+      0% { top:-10%; opacity:0; }
+      10% { opacity:1; }
+      100% { top:120%; opacity:0; }
+    }
+    
+    /* Ánh sáng quét qua mặt (Reflection) */
+    .avatar::after{
+      content:""; position:absolute; top:0; left:0; width:100%; height:100%;
+      background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.6) 50%, transparent 70%);
+      transform: translateX(-100%);
+      animation: shinePass 2s ease-out forwards;
+      animation-delay: 0.8s;
+    }
+    @keyframes shinePass{ to{transform:translateX(100%)} }
+
+    /* GIỌT NƯỚC BẮN LÊN */
+    .droplets{
+      position:absolute; left:50%; bottom:30px; width:220px; height:100px;
+      transform:translateX(-50%); pointer-events:none; z-index:4;
+    }
+    .drop{
+      position:absolute; left:50%; bottom:0;
+      width:6px; height:6px; border-radius:50%;
+      background: #fff;
+      box-shadow: 0 0 6px var(--accent2);
+      opacity:0;
+    }
+    .d1{animation: dropFly var(--bobDur) ease-out infinite; animation-delay:1.0s;}
+    .d2{animation: dropFly var(--bobDur) ease-out infinite; animation-delay:1.0s;}
+    
+    @keyframes dropFly{
+      0% { opacity:1; transform:translate(-50%, 0) scale(1); }
+      100% { opacity:0; transform:translate(var(--x), -50px) scale(0); }
     }
 
-    /* ===== NAME + SUBTITLE ===== */
+    /* TEXT STYLES */
     .name{
-      font-size: clamp(38px, 7.2vw, 58px);
-      line-height: 1.2;
-      padding: 6px 10px;
-      margin-top: 6px;
-      font-weight:900;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-      overflow: visible;
-      display: inline-block;
-
-      opacity:0;
-      transform: translateY(14px);
-      animation: heroText .75s ease-out forwards;
-      animation-delay:.70s;
+      font-size: clamp(38px, 7.2vw, 58px); line-height: 1.2; padding: 6px 10px; margin-top: 6px;
+      font-weight:900; background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      opacity:0; transform: translateY(14px); animation: heroText .75s ease-out forwards; animation-delay:.70s;
     }
     .subtitle{
-      font-size:15.5px;
-      color:var(--muted);
-      line-height:1.65;
-      max-width:740px;
-      opacity:0;
-      transform: translateY(14px);
-      animation: heroText .75s ease-out forwards;
-      animation-delay:1.05s;
+      font-size:15.5px; color:var(--muted); line-height:1.65; max-width:740px;
+      opacity:0; transform: translateY(14px); animation: heroText .75s ease-out forwards; animation-delay:1.05s;
     }
     @keyframes heroText{to{opacity:1;transform:translateY(0)}}
     .nowrap{white-space:nowrap}
 
-    /* Chips */
+    /* CHIPS */
     .chips{
-      display:flex; flex-wrap:wrap; justify-content:center;
-      gap:10px; margin-top:8px;
-      opacity:0; transform: translateY(12px);
-      animation: heroText .75s ease-out forwards;
-      animation-delay:1.25s;
+      display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:8px;
+      opacity:0; transform: translateY(12px); animation: heroText .75s ease-out forwards; animation-delay:1.25s;
     }
     .chip{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid rgba(25,60,90,.12);
-      background: rgba(255,255,255,.78);
-      box-shadow: 0 10px 25px rgba(10,30,50,.08);
-      font-size:13.5px;
-      color:rgba(11,27,42,.86);
+      display:inline-flex; align-items:center; gap:8px; padding:10px 12px;
+      border-radius:999px; border:1px solid rgba(25,60,90,.12); background: rgba(255,255,255,.78);
+      box-shadow: 0 10px 25px rgba(10,30,50,.08); font-size:13.5px; color:rgba(11,27,42,.86);
     }
-    .chip .dot{
-      width:9px;height:9px;border-radius:50%;
-      background: linear-gradient(180deg, var(--accent), var(--accent2));
-    }
+    .chip .dot{width:9px;height:9px;border-radius:50%; background: linear-gradient(180deg, var(--accent), var(--accent2));}
 
-    /* Cards */
+    /* CARDS & SECTIONS */
     .section{margin-top:14px}
     .card{
-      background: var(--card);
-      border:1px solid var(--line);
-      border-radius: var(--radius);
-      padding:18px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
+      background: var(--card); border:1px solid var(--line); border-radius: var(--radius);
+      padding:18px; box-shadow: var(--shadow); backdrop-filter: blur(10px);
     }
     .head{display:flex; align-items:center; gap:10px; margin-bottom:10px}
     .ico{
-      width:40px;height:40px;border-radius:14px;
-      display:grid;place-items:center;
-      border:1px solid rgba(25,60,90,.12);
-      background: rgba(30,167,255,.10);
+      width:40px;height:40px;border-radius:14px; display:grid;place-items:center;
+      border:1px solid rgba(25,60,90,.12); background: rgba(30,167,255,.10);
     }
     .head h2{font-size:16px; letter-spacing:.2px}
     .card p{color:var(--muted); line-height:1.7; font-size:15.5px}
 
-    /* Flip show/hide replay */
+    /* Flip Animation */
     .flip{
-      opacity:0;
-      transform: perspective(900px) rotateX(16deg) translateY(38px);
-      transform-origin: top;
-      transition:
-        opacity .75s ease,
-        transform .75s cubic-bezier(.2,.85,.2,1);
-      will-change: opacity, transform;
+      opacity:0; transform: perspective(900px) rotateX(16deg) translateY(38px); transform-origin: top;
+      transition: opacity .75s ease, transform .75s cubic-bezier(.2,.85,.2,1); will-change: opacity, transform;
     }
-    .flip.show{
-      opacity:1;
-      transform: perspective(900px) rotateX(0deg) translateY(0);
-    }
+    .flip.show{opacity:1; transform: perspective(900px) rotateX(0deg) translateY(0);}
 
-    /* Projects */
-    .projGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-      margin-top:12px;
-    }
+    /* PROJECTS */
+    .projGrid{display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px;}
     @media (max-width:680px){ .projGrid{grid-template-columns:1fr} }
     .project{
-      display:block;
-      border:1px solid rgba(25,60,90,.12);
-      background: rgba(255,255,255,.80);
-      border-radius:18px;
-      padding:14px;
-      text-decoration:none;
-      color:var(--text);
-      transition:.18s ease;
+      display:block; border:1px solid rgba(25,60,90,.12); background: rgba(255,255,255,.80);
+      border-radius:18px; padding:14px; text-decoration:none; color:var(--text); transition:.18s ease;
     }
     .project:hover{transform: translateY(-2px); box-shadow: 0 16px 40px rgba(10,30,50,.10)}
     .badge{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(25,60,90,.10);
+      display:inline-flex; align-items:center; gap:8px; padding:8px 10px;
+      border-radius:999px; border:1px solid rgba(25,60,90,.10);
       background: linear-gradient(90deg, rgba(30,167,255,.12), rgba(46,230,195,.10));
-      font-weight:900;
-      font-size:12.5px;
-      width:fit-content;
+      font-weight:900; font-size:12.5px; width:fit-content;
     }
     .project h3{margin-top:10px; font-size:16px}
     .project .desc{margin-top:6px; color:var(--muted); font-size:14px; line-height:1.55}
     .project .link{margin-top:10px; font-weight:900; color: rgba(11,27,42,.88)}
 
-    /* Contact tiles */
-    .grid2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-      margin-top:12px;
-    }
+    /* CONTACT */
+    .grid2{display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px;}
     @media (max-width:680px){ .grid2{grid-template-columns:1fr} }
     .tile{
-      display:flex; gap:12px; align-items:center;
-      padding:14px;
-      border-radius:16px;
-      border:1px solid rgba(25,60,90,.12);
-      background: rgba(255,255,255,.78);
-      text-decoration:none;
-      color:var(--text);
-      transition:.18s ease;
+      display:flex; gap:12px; align-items:center; padding:14px; border-radius:16px;
+      border:1px solid rgba(25,60,90,.12); background: rgba(255,255,255,.78);
+      text-decoration:none; color:var(--text); transition:.18s ease;
     }
     .tile:hover{transform: translateY(-2px); box-shadow: 0 16px 40px rgba(10,30,50,.10)}
     .tile b{display:block}
@@ -680,33 +316,18 @@
 
     .btns{display:flex; flex-wrap:wrap; gap:10px; margin-top:12px}
     .btn{
-      display:inline-flex; align-items:center; gap:10px;
-      padding:11px 12px;
-      border-radius:14px;
-      border:1px solid rgba(25,60,90,.12);
-      background: rgba(30,167,255,.10);
-      color:var(--text);
-      text-decoration:none;
-      font-weight:900;
-      transition:.18s ease;
+      display:inline-flex; align-items:center; gap:10px; padding:11px 12px;
+      border-radius:14px; border:1px solid rgba(25,60,90,.12); background: rgba(30,167,255,.10);
+      color:var(--text); text-decoration:none; font-weight:900; transition:.18s ease;
     }
     .btn:hover{transform: translateY(-1px); background: rgba(30,167,255,.14)}
-    .btn.primary{
-      background: linear-gradient(90deg, rgba(30,167,255,.22), rgba(46,230,195,.18));
-    }
+    .btn.primary{background: linear-gradient(90deg, rgba(30,167,255,.22), rgba(46,230,195,.18));}
 
     footer{
-      margin-top:18px;
-      text-align:center;
-      color:rgba(11,27,42,.65);
-      font-size:13px;
-      padding-top:14px;
-      border-top:1px solid rgba(25,60,90,.10);
+      margin-top:18px; text-align:center; color:rgba(11,27,42,.65);
+      font-size:13px; padding-top:14px; border-top:1px solid rgba(25,60,90,.10);
     }
-
-    svg{width:20px;height:20px}
-    .stroke{stroke:rgba(11,27,42,.75)}
-    .fill{fill:rgba(11,27,42,.80)}
+    svg{width:20px;height:20px} .stroke{stroke:rgba(11,27,42,.75)} .fill{fill:rgba(11,27,42,.80)}
   </style>
 </head>
 
@@ -717,10 +338,8 @@
   <header id="hdr">
     <div class="nav">
       <div class="brand">
-        <div class="mark">HB</div>
-        <span>Hồng Gia Bảo</span>
+        <div class="mark">HB</div><span>Hồng Gia Bảo</span>
       </div>
-
       <nav aria-label="Menu">
         <ul>
           <li><a href="#home" data-link>Home</a></li>
@@ -730,7 +349,6 @@
           <li><a href="#contact" data-link>Contact</a></li>
         </ul>
       </nav>
-
       <div class="nav-right">
         <a class="cta" href="#contact">Contact Me</a>
         <button class="hamburger" id="hambtn" aria-label="Mở menu">☰</button>
@@ -741,39 +359,30 @@
   <section class="hero" id="home">
     <div class="avatarWrap">
       <div class="bob">
-        <!-- WATER -->
-        <div class="water" aria-hidden="true">
-          <div class="waterSurface"></div>
-          <div class="specular"></div>
-
+        <div class="water">
+          <div class="surface"></div>
+          
           <div class="ripple r1"></div>
           <div class="ripple r2"></div>
           <div class="ripple r3"></div>
-          <div class="fine"></div>
-
-          <div class="impact"></div>
-
+          
           <div class="droplets">
-            <span class="drop d1"></span>
-            <span class="drop d2"></span>
-            <span class="drop d3"></span>
-            <span class="drop d4"></span>
+             <span class="drop d1" style="--x:-40px"></span>
+             <span class="drop d2" style="--x:40px"></span>
           </div>
         </div>
 
-        <!-- AVATAR -->
         <div class="avatar">
           <img src="avatar.jpg" alt="Avatar" />
-          <div class="scan"></div>
+          <div class="scan-line"></div>
         </div>
       </div>
     </div>
 
     <div class="name">Hồng Gia Bảo</div>
-
     <div class="subtitle">
-      Sinh viên <b class="nowrap">Cao&nbsp;đẳng An&nbsp;ninh&nbsp;mạng iSPACE</b> • Ngành <b class="nowrap">An&nbsp;ninh&nbsp;mạng</b><br/>
-      Cộng tác viên <b class="nowrap">tư vấn tuyển sinh</b> của <b class="nowrap">Cao&nbsp;đẳng iSPACE</b>
+      Sinh viên <b class="nowrap">Cao đẳng An ninh mạng iSPACE</b> • Ngành <b class="nowrap">An ninh mạng</b><br/>
+      Cộng tác viên <b class="nowrap">tư vấn tuyển sinh</b> của <b class="nowrap">Cao đẳng iSPACE</b>
     </div>
 
     <div class="chips">
@@ -785,59 +394,33 @@
   </section>
 
   <main>
-    <!-- ABOUT -->
     <section class="section" id="about">
       <div class="card flip" data-delay="0">
         <div class="head">
-          <div class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" class="stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 21a8 8 0 0 0-16 0"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-          </div>
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" class="stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 0 0-16 0"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
           <h2>Giới thiệu</h2>
         </div>
-        <p>
-          Mình là <b>Hồng Gia Bảo</b>. Mình thích <b>đồ công nghệ</b>, thích tìm hiểu cấu tạo – cách hoạt động của <b>đồ công nghệ</b>,
-          và mình cũng thích quay/chụp để lưu lại khoảnh khắc và hành trình.
-        </p>
+        <p>Mình là <b>Hồng Gia Bảo</b>. Mình thích <b>đồ công nghệ</b>, tìm hiểu cấu tạo và cách hoạt động của chúng. Mình cũng đam mê quay phim, chụp ảnh để lưu giữ những khoảnh khắc đẹp.</p>
       </div>
     </section>
 
-    <!-- SKILLS -->
     <section class="section" id="skills">
       <div class="card flip" data-delay="90">
         <div class="head">
-          <div class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" class="stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14.7 6.3a1 1 0 0 1 1.4 0l1.6 1.6a1 1 0 0 1 0 1.4l-8.4 8.4L6 19l.9-3.3 7.8-7.8z"></path>
-              <path d="M12 20h9"></path>
-            </svg>
-          </div>
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" class="stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 1 1.4 0l1.6 1.6a1 1 0 0 1 0 1.4l-8.4 8.4L6 19l.9-3.3 7.8-7.8z"></path><path d="M12 20h9"></path></svg></div>
           <h2>Kỹ năng</h2>
         </div>
-        <p>
-          • <b>Quay & dựng cơ bản</b> (cắt ghép, nhịp, âm thanh) 🎬<br>
-          • <b>Chỉnh video / edit</b> (màu cơ bản, chữ, hiệu ứng nhẹ) ✨
-        </p>
+        <p>• <b>Quay & dựng cơ bản</b> (cắt ghép, nhịp, âm thanh) 🎬<br>• <b>Chỉnh video / edit</b> (màu cơ bản, chữ, hiệu ứng nhẹ) ✨</p>
       </div>
     </section>
 
-    <!-- PROJECTS -->
     <section class="section" id="projects">
       <div class="card flip" data-delay="180">
         <div class="head">
-          <div class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" class="stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M8 9l-3 3 3 3"></path>
-              <path d="M16 9l3 3-3 3"></path>
-              <path d="M14 7l-4 10"></path>
-            </svg>
-          </div>
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" class="stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-3 3 3 3"></path><path d="M16 9l3 3-3 3"></path><path d="M14 7l-4 10"></path></svg></div>
           <h2>Dự án</h2>
         </div>
-        <p>Một vài project mình đã làm (bấm vào để xem):</p>
-
+        <p>Một vài project mình đã làm:</p>
         <div class="projGrid">
           <a class="project" href="https://honggiabao2911.github.io/qua-tang-20.10/" target="_blank" rel="noopener">
             <div class="badge">🎁 Thiệp / Quà tặng</div>
@@ -845,7 +428,6 @@
             <div class="desc">Trang quà tặng/thiệp online — hiệu ứng nhẹ, giao diện dễ thương.</div>
             <div class="link">Mở dự án →</div>
           </a>
-
           <a class="project" href="https://honggiabao2911.github.io/thieptrungthu/" target="_blank" rel="noopener">
             <div class="badge">🌙 Thiệp Trung Thu</div>
             <h3>Thiệp Trung Thu</h3>
@@ -856,97 +438,64 @@
       </div>
     </section>
 
-    <!-- CONTACT -->
     <section class="section" id="contact">
       <div class="card flip" data-delay="270">
         <div class="head">
-          <div class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" class="stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M10 13a5 5 0 0 0 7.07 0l1.41-1.41a5 5 0 0 0-7.07-7.07L10 4"></path>
-              <path d="M14 11a5 5 0 0 0-7.07 0L5.52 12.4a5 5 0 0 0 7.07 7.07L14 20"></path>
-            </svg>
-          </div>
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" class="stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l1.41-1.41a5 5 0 0 0-7.07-7.07L10 4"></path><path d="M14 11a5 5 0 0 0-7.07 0L5.52 12.4a5 5 0 0 0 7.07 7.07L14 20"></path></svg></div>
           <h2>Liên hệ</h2>
         </div>
-
         <div class="grid2">
           <a class="tile" target="_blank" rel="noopener" href="https://www.facebook.com/share/17YPJnPHDH/">
-            <div class="ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24" class="fill">
-                <path d="M13.5 22v-8h2.7l.4-3H13.5V9.1c0-.9.3-1.5 1.6-1.5H16.8V5a24 24 0 0 0-2.4-.1c-2.4 0-4 1.4-4 4V11H8v3h2.4v8h3.1z"></path>
-              </svg>
-            </div>
-            <div><b>Facebook</b><span>Mở trang Facebook của tôi</span></div>
+            <div class="ico"><svg viewBox="0 0 24 24" class="fill"><path d="M13.5 22v-8h2.7l.4-3H13.5V9.1c0-.9.3-1.5 1.6-1.5H16.8V5a24 24 0 0 0-2.4-.1c-2.4 0-4 1.4-4 4V11H8v3h2.4v8h3.1z"></path></svg></div>
+            <div><b>Facebook</b><span>Mở trang Facebook</span></div>
           </a>
-
           <a class="tile" target="_blank" rel="noopener" href="https://zalo.me/0815882673">
-            <div class="ico" aria-hidden="true" style="font-weight:900;">Z</div>
-            <div><b>Zalo</b><span>Chat Zalo: 0815882673</span></div>
+            <div class="ico" style="font-weight:900;">Z</div>
+            <div><b>Zalo</b><span>0815882673</span></div>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- SCHOOL -->
     <section class="section" id="school">
       <div class="card flip" data-delay="360">
         <div class="head">
-          <div class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" class="stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 10l9-5 9 5-9 5-9-5z"></path>
-              <path d="M5 12v6l7 4 7-4v-6"></path>
-            </svg>
-          </div>
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" class="stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-5 9 5-9 5-9 5z"></path><path d="M5 12v6l7 4 7-4v-6"></path></svg></div>
           <h2>Trường iSPACE</h2>
         </div>
-
-        <p>Nếu bạn muốn xem thông tin trường hoặc mở chỉ đường nhanh:</p>
+        <p>Thông tin trường:</p>
         <div class="btns">
           <a class="btn primary" target="_blank" rel="noopener" href="https://ispace.edu.vn/">🌐 Website iSPACE</a>
-          <a class="btn" target="_blank" rel="noopener"
-             href="https://www.google.com/maps/search/?api=1&query=Tr%C6%B0%E1%BB%9Dng%20Cao%20%C4%91%E1%BA%A3ng%20An%20ninh%20m%E1%BA%A1ng%20iSPACE">🧭 Google Maps</a>
+          <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Tr%C6%B0%E1%BB%9Dng%20Cao%20%C4%91%E1%BA%A3ng%20An%20ninh%20m%E1%BA%A1ng%20iSPACE">🧭 Google Maps</a>
         </div>
       </div>
     </section>
 
-    <footer class="card flip" data-delay="450">
-      © <span id="year"></span> • Hồng Gia Bảo
-    </footer>
+    <footer class="card flip" data-delay="450">© <span id="year"></span> • Hồng Gia Bảo</footer>
   </main>
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // mobile menu
     const hdr = document.getElementById("hdr");
     document.getElementById("hambtn").addEventListener("click", ()=> hdr.classList.toggle("open"));
     document.querySelectorAll('a[data-link]').forEach(a=>{
       a.addEventListener("click", ()=> hdr.classList.remove("open"));
     });
 
-    // Flip show/hide replay
     const flips = Array.from(document.querySelectorAll(".flip"));
-    flips.forEach((el) => {
-      const d = Number(el.getAttribute("data-delay") || "0");
-      el.style.transitionDelay = d + "ms";
-    });
-
+    flips.forEach((el) => el.style.transitionDelay = (el.getAttribute("data-delay")||"0") + "ms");
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        const el = entry.target;
         if (entry.isIntersecting) {
-          el.classList.remove("show");
-          void el.offsetWidth;
-          el.classList.add("show");
-        } else {
-          el.classList.remove("show");
+          entry.target.classList.remove("show");
+          void entry.target.offsetWidth;
+          entry.target.classList.add("show");
         }
       });
     }, { threshold: 0.22, rootMargin: "-10% 0px -10% 0px" });
-
     flips.forEach(el => io.observe(el));
 
-    // Active nav highlight
     const sections = ["home","about","skills","projects","contact"].map(id => document.getElementById(id));
     const links = Array.from(document.querySelectorAll('a[data-link]'));
     const setActive = (id) => links.forEach(l => l.classList.toggle("active", l.getAttribute("href") === "#" + id));
@@ -955,38 +504,29 @@
     },{threshold:0.55});
     sections.forEach(s=> navIO.observe(s));
 
-    // ====== CODE RUNNING BACKGROUND (MATRIX-LIKE) ======
+    // Matrix Code BG
     const canvas = document.getElementById("codeBg");
     const ctx = canvas.getContext("2d", { alpha:true });
-
-    const chars = "01<>/{}[]()$#@&*+-=HGBaoispaceCYBER";
+    const chars = "01HGBAOispace";
     let w, h, cols, drops, fontSize;
-
     function resize(){
       w = canvas.width = window.innerWidth * devicePixelRatio;
       h = canvas.height = window.innerHeight * devicePixelRatio;
       fontSize = Math.max(14, Math.floor(Math.min(window.innerWidth, 1200) / 70)) * devicePixelRatio;
       cols = Math.floor(w / fontSize);
       drops = Array(cols).fill(0).map(()=> Math.random()*h);
-      ctx.font = `${fontSize}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`;
+      ctx.font = fontSize+"px monospace";
     }
     window.addEventListener("resize", resize, {passive:true});
     resize();
-
     function tick(){
-      ctx.fillStyle = "rgba(247, 251, 255, 0.08)";
-      ctx.fillRect(0, 0, w, h);
-
+      ctx.fillStyle = "rgba(247, 251, 255, 0.08)"; ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = "rgba(30,167,255,0.52)";
       for(let i=0;i<cols;i++){
         const ch = chars[Math.floor(Math.random()*chars.length)];
-        const x = i * fontSize;
-        const y = drops[i];
-
-        ctx.fillStyle = "rgba(30,167,255,0.52)";
-        ctx.fillText(ch, x, y);
-
+        ctx.fillText(ch, i*fontSize, drops[i]);
         drops[i] += fontSize * (0.95 + Math.random()*0.55);
-        if(drops[i] > h && Math.random() > 0.975) drops[i] = -fontSize * (2 + Math.random()*10);
+        if(drops[i] > h && Math.random() > 0.975) drops[i] = -fontSize;
       }
       requestAnimationFrame(tick);
     }
