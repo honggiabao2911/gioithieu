@@ -33,7 +33,6 @@
       overflow-x:hidden;
     }
 
-    /* Subtle tech grid */
     .bg-grid{
       position:fixed; inset:0; z-index:-1; pointer-events:none;
       background-image:
@@ -75,8 +74,6 @@
       font-weight:900;
       color: rgba(11,27,42,.88);
     }
-    .brand span{font-size:16px}
-
     nav ul{
       list-style:none;
       display:flex;
@@ -104,10 +101,7 @@
       border-color: rgba(25,60,90,.10);
       color: rgba(11,27,42,.95);
     }
-
-    .nav-right{
-      display:flex; align-items:center; gap:10px;
-    }
+    .nav-right{display:flex; align-items:center; gap:10px}
     .cta{
       text-decoration:none;
       display:inline-flex; align-items:center; gap:10px;
@@ -122,7 +116,6 @@
       white-space:nowrap;
     }
     .cta:hover{transform: translateY(-1px)}
-
     .hamburger{
       display:none;
       width:42px;height:42px;border-radius:14px;
@@ -133,7 +126,6 @@
       font-size:18px;
       font-weight:900;
     }
-
     @media (max-width: 820px){
       nav{display:none}
       .hamburger{display:inline-grid; place-items:center}
@@ -153,15 +145,12 @@
         gap:6px;
       }
       header.open nav a{display:block}
-      header.open .nav{
-        position:relative;
-      }
+      header.open .nav{position:relative}
     }
 
-    /* ===== PAGE LAYOUT ===== */
+    /* ===== PAGE ===== */
     main{max-width:940px;margin:0 auto;padding:18px 14px 70px}
 
-    /* HERO */
     .hero{
       min-height: calc(100vh - 66px);
       display:flex;
@@ -188,7 +177,6 @@
 
     .name{
       font-size: clamp(36px, 7vw, 56px);
-      letter-spacing:.2px;
       line-height:1.05;
       font-weight:900;
       background: linear-gradient(90deg, var(--accent), var(--accent2));
@@ -213,11 +201,8 @@
       animation-delay:.9s;
     }
     @keyframes heroText{to{opacity:1;transform:translateY(0)}}
-
-    /* prevent weird breaks */
     .nowrap{white-space:nowrap}
 
-    /* Quick chips */
     .chips{
       display:flex; flex-wrap:wrap; justify-content:center;
       gap:10px; margin-top:8px;
@@ -240,7 +225,6 @@
       background: linear-gradient(180deg, var(--accent), var(--accent2));
     }
 
-    /* Cards */
     .section{margin-top:14px}
     .card{
       background: var(--card);
@@ -250,29 +234,18 @@
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
-
-    .head{
-      display:flex; align-items:center; gap:10px;
-      margin-bottom:10px;
-    }
+    .head{display:flex; align-items:center; gap:10px; margin-bottom:10px}
     .ico{
       width:40px;height:40px;border-radius:14px;
       display:grid;place-items:center;
       border:1px solid rgba(25,60,90,.12);
       background: rgba(30,167,255,.10);
     }
-    .head h2{
-      font-size:16px;
-      letter-spacing:.2px;
-      margin:0;
-    }
-    .card p{
-      color:var(--muted);
-      line-height:1.7;
-      font-size:15.5px;
-    }
+    .head h2{font-size:16px; letter-spacing:.2px}
 
-    /* Flip show/hide (scroll down show, scroll up hide, down again show) */
+    .card p{color:var(--muted); line-height:1.7; font-size:15.5px}
+
+    /* Flip show/hide */
     .flip{
       opacity:0;
       transform: perspective(900px) rotateX(16deg) translateY(38px);
@@ -287,6 +260,39 @@
       transform: perspective(900px) rotateX(0deg) translateY(0);
     }
 
+    /* Projects */
+    .projGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    @media (max-width:680px){ .projGrid{grid-template-columns:1fr} }
+    .project{
+      display:block;
+      border:1px solid rgba(25,60,90,.12);
+      background: rgba(255,255,255,.80);
+      border-radius:18px;
+      padding:14px;
+      text-decoration:none;
+      color:var(--text);
+      transition:.18s ease;
+    }
+    .project:hover{transform: translateY(-2px); box-shadow: 0 16px 40px rgba(10,30,50,.10)}
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(25,60,90,.10);
+      background: linear-gradient(90deg, rgba(30,167,255,.12), rgba(46,230,195,.10));
+      font-weight:900;
+      font-size:12.5px;
+      width:fit-content;
+    }
+    .project h3{margin-top:10px; font-size:16px}
+    .project .desc{margin-top:6px; color:var(--muted); font-size:14px; line-height:1.55}
+    .project .link{margin-top:10px; font-weight:900; color: rgba(11,27,42,.88)}
+
     /* Contact tiles */
     .grid2{
       display:grid;
@@ -295,7 +301,6 @@
       margin-top:12px;
     }
     @media (max-width:680px){ .grid2{grid-template-columns:1fr} }
-
     .tile{
       display:flex; gap:12px; align-items:center;
       padding:14px;
@@ -359,7 +364,6 @@
       border-top:1px solid rgba(25,60,90,.10);
     }
 
-    /* Inline SVG */
     svg{width:20px;height:20px}
     .stroke{stroke:rgba(11,27,42,.75)}
     .fill{fill:rgba(11,27,42,.80)}
@@ -369,7 +373,6 @@
 <body>
   <div class="bg-grid"></div>
 
-  <!-- NAVBAR -->
   <header id="hdr">
     <div class="nav">
       <div class="brand">
@@ -382,6 +385,7 @@
           <li><a href="#home" data-link>Home</a></li>
           <li><a href="#about" data-link>About</a></li>
           <li><a href="#skills" data-link>Skills</a></li>
+          <li><a href="#projects" data-link>Projects</a></li>
           <li><a href="#contact" data-link>Contact</a></li>
         </ul>
       </nav>
@@ -393,7 +397,6 @@
     </div>
   </header>
 
-  <!-- HERO -->
   <section class="hero" id="home">
     <div class="avatar">
       <img src="avatar.jpg" alt="Avatar" />
@@ -454,25 +457,35 @@
       </div>
     </section>
 
-    <!-- HOBBIES -->
-    <section class="section" id="hobbies">
+    <!-- PROJECTS -->
+    <section class="section" id="projects">
       <div class="card flip" data-delay="180">
         <div class="head">
           <div class="ico" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" class="stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 21s-7-4.4-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.6-9.5 9-9.5 9z"></path>
+              <path d="M8 9l-3 3 3 3"></path>
+              <path d="M16 9l3 3-3 3"></path>
+              <path d="M14 7l-4 10"></path>
             </svg>
           </div>
-          <h2>Sở thích</h2>
+          <h2>Dự án</h2>
         </div>
+        <p>Một vài project mình đã làm (bấm vào để xem):</p>
 
-        <div class="hobbyList">
-          <div class="hobbyItem"><div class="hobbyEmoji">📷</div><div><b>Chụp hình</b><div style="color:var(--muted);font-size:13px">Khoảnh khắc & góc máy</div></div></div>
-          <div class="hobbyItem"><div class="hobbyEmoji">🎥</div><div><b>Quay video</b><div style="color:var(--muted);font-size:13px">Vlog / clip ngắn</div></div></div>
-          <div class="hobbyItem"><div class="hobbyEmoji">✂️</div><div><b>Edit video</b><div style="color:var(--muted);font-size:13px">Cắt ghép & hiệu ứng nhẹ</div></div></div>
-          <div class="hobbyItem"><div class="hobbyEmoji">🏍️</div><div><b>Đi phượt</b><div style="color:var(--muted);font-size:13px">Khám phá & trải nghiệm</div></div></div>
-          <div class="hobbyItem"><div class="hobbyEmoji">🧰</div><div><b>Đồ công nghệ</b><div style="color:var(--muted);font-size:13px">Mò & sửa thiết bị</div></div></div>
-          <div class="hobbyItem"><div class="hobbyEmoji">🎮</div><div><b>Game / phim</b><div style="color:var(--muted);font-size:13px">Giải trí</div></div></div>
+        <div class="projGrid">
+          <a class="project" href="https://honggiabao2911.github.io/qua-tang-20.10/" target="_blank" rel="noopener">
+            <div class="badge">🎁 Thiệp / Quà tặng</div>
+            <h3>Project 20.11 (qua-tang-20.10)</h3>
+            <div class="desc">Trang quà tặng/thiệp online — hiệu ứng nhẹ, giao diện dễ thương.</div>
+            <div class="link">Mở dự án →</div>
+          </a>
+
+          <a class="project" href="https://honggiabao2911.github.io/thieptrungthu/" target="_blank" rel="noopener">
+            <div class="badge">🌙 Thiệp Trung Thu</div>
+            <h3>Thiệp Trung Thu</h3>
+            <div class="desc">Trang thiệp Trung Thu — bố cục gọn, hiệu ứng mượt.</div>
+            <div class="link">Mở dự án →</div>
+          </a>
         </div>
       </div>
     </section>
@@ -508,7 +521,7 @@
       </div>
     </section>
 
-    <!-- SCHOOL LINKS -->
+    <!-- SCHOOL -->
     <section class="section" id="school">
       <div class="card flip" data-delay="360">
         <div class="head">
@@ -518,11 +531,10 @@
               <path d="M5 12v6l7 4 7-4v-6"></path>
             </svg>
           </div>
-        <h2>Trường iSPACE</h2>
+          <h2>Trường iSPACE</h2>
         </div>
 
         <p>Nếu bạn muốn xem thông tin trường hoặc mở chỉ đường nhanh:</p>
-
         <div class="btns">
           <a class="btn primary" target="_blank" rel="noopener" href="https://ispace.edu.vn/">🌐 Website iSPACE</a>
           <a class="btn" target="_blank" rel="noopener"
@@ -537,19 +549,16 @@
   </main>
 
   <script>
-    // year
     document.getElementById("year").textContent = new Date().getFullYear();
 
     // mobile menu
     const hdr = document.getElementById("hdr");
-    const hambtn = document.getElementById("hambtn");
-    hambtn.addEventListener("click", ()=> hdr.classList.toggle("open"));
-    // close menu when clicking a link (mobile)
+    document.getElementById("hambtn").addEventListener("click", ()=> hdr.classList.toggle("open"));
     document.querySelectorAll('a[data-link]').forEach(a=>{
       a.addEventListener("click", ()=> hdr.classList.remove("open"));
     });
 
-    // Flip show/hide on scroll (replay when enter, hide when leave)
+    // Flip show/hide replay
     const flips = Array.from(document.querySelectorAll(".flip"));
     flips.forEach((el) => {
       const d = Number(el.getAttribute("data-delay") || "0");
@@ -561,7 +570,7 @@
         const el = entry.target;
         if (entry.isIntersecting) {
           el.classList.remove("show");
-          void el.offsetWidth; // reflow to replay
+          void el.offsetWidth;
           el.classList.add("show");
         } else {
           el.classList.remove("show");
@@ -571,17 +580,17 @@
 
     flips.forEach(el => io.observe(el));
 
-    // Active nav link highlight (simple)
-    const sections = ["home","about","skills","contact"].map(id => document.getElementById(id));
+    // Active nav link highlight
+    const sections = ["home","about","skills","projects","contact"].map(id => document.getElementById(id));
     const links = Array.from(document.querySelectorAll('a[data-link]'));
-    const setActive = (id) => {
-      links.forEach(l => l.classList.toggle("active", l.getAttribute("href") === "#" + id));
-    };
+    const setActive = (id) => links.forEach(l => l.classList.toggle("active", l.getAttribute("href") === "#" + id));
+
     const navIO = new IntersectionObserver((entries)=>{
       entries.forEach(e=>{
         if(e.isIntersecting) setActive(e.target.id);
       });
     },{threshold:0.55});
+
     sections.forEach(s=> navIO.observe(s));
   </script>
 </body>
