@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cyber Profile</title>
+<style>
+:root{
+  --bg:#020A13;
+  --bg2:#020E1C;
+  --card:rgba(0,160,220,.10);
+  --card2:rgba(0,160,220,.16);
+  --text:#E9F6FF;
+  --muted:rgba(210,235,255,.78);
+  --line:rgba(0,180,255,.28);
+  --glow:#00AFFF;
+  --glow2:#00E6FF;
+  --mint:#00FFC8;
+  --shadow: 0 20px 60px rgba(0,80,120,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:system-ui,Segoe UI,Roboto;
+  color:var(--text);
+  background:linear-gradient(180deg,var(--bg),var(--bg2));
+  overflow-x:hidden;
+}
+canvas#code{position:fixed;inset:0;z-index:-2;opacity:.25;pointer-events:none;}
+main{max-width:900px;margin:auto;padding:16px;}
+.card{
+  border:1px solid var(--line);
+  background:var(--card2);
+  border-radius:16px;
+  padding:18px;
+  margin:14px 0;
+  box-shadow:var(--shadow);
+  transform-origin:top;
+  opacity:0;
+  transform:perspective(800px) rotateX(10deg) translateY(30px);
+  transition:opacity .8s ease,transform .8s ease;
+}
+.card.show{
+  opacity:1;
+  transform:perspective(800px) rotateX(0) translateY(0);
+}
+.card:nth-child(odd).show{transition-delay:.1s;}
+.card:nth-child(even).show{transition-delay:.25s;}
+
+.avatar-wrap{
+  display:flex;justify-content:center;margin:40px 0;
+  opacity:0;transform:translateY(30px) scale(.9);
+  animation:avatarIn 1.2s ease-out forwards;
+}
+@keyframes avatarIn{
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+.avatar{
+  width:140px;height:140px;border-radius:50%;
+  border:3px solid var(--glow);
+  box-shadow:0 0 20px var(--glow2),0 0 40px var(--glow2);
+  animation:pulse 2.8s infinite ease-in-out;
+  overflow:hidden;
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 20px var(--glow2),0 0 40px var(--glow2);}
+  50%{box-shadow:0 0 35px var(--mint),0 0 65px var(--glow2);}
+}
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+
+h1{
+  text-align:center;
+  font-size:clamp(26px,5vw,36px);
+  margin-bottom:8px;
+  color:var(--glow2);
+  text-shadow:0 0 10px var(--glow),0 0 20px var(--glow2);
+}
+.neon.glitchable:active::before,
+.neon.glitchable:active::after{
+  opacity:1;animation:glitch .5s steps(2,end) infinite;
+}
+.neon::before,.neon::after{
+  content:attr(data-text);position:absolute;left:0;top:0;width:100%;opacity:0;
+}
+.neon::before{color:#00bfff;text-shadow:-2px 0 #00bfff;}
+.neon::after{color:#00ffff;text-shadow:2px 0 #00ffff;}
+@keyframes glitch{
+  0%{clip-path:inset(0 0 80% 0);transform:translate(-1px,-1px);}
+  50%{clip-path:inset(20% 0 40% 0);transform:translate(1px,1px);}
+  100%{clip-path:inset(60% 0 20% 0);transform:translate(-1px,0);}
+}
+
+h2{color:var(--glow2);margin-bottom:6px;}
+p{color:var(--muted);line-height:1.6;font-size:15px;}
+.timeline{border-left:2px solid var(--glow2);margin:20px 0;padding-left:12px;}
+.timeline-item{position:relative;margin-bottom:16px;}
+.timeline-item::before{
+  content:'';position:absolute;left:-9px;top:4px;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--glow2);box-shadow:0 0 10px var(--glow2);
+}
+.timeline-item h3{margin:0;font-size:15px;color:var(--text);}
+.timeline-item span{font-size:13px;color:var(--mint);}
+.timeline-item p{margin-top:4px;}
+footer{text-align:center;margin:30px 0;font-size:13px;color:var(--muted);}
+</style>
+</head>
+<body>
+<canvas id="code"></canvas>
+
+<div class="avatar-wrap">
+  <div class="avatar">
+    <img src="avatar.jpg" alt="avatar">
+  </div>
+</div>
+<h1 class="neon glitchable" data-text="Tên của bạn">Tên của bạn</h1>
+<main>
+  <div class="card"><h2>Giới thiệu</h2>
+    <p>Mình là sinh viên trường Cao đẳng An ninh mạng iSPACE, học ngành An ninh mạng. Mình yêu công nghệ và định hướng trở thành chuyên viên bảo mật.</p>
+  </div>
+  <div class="card"><h2>Kỹ năng</h2>
+    <p>• HTML/CSS/JS cơ bản, tạo website giao diện mượt<br>• Mạng máy tính, IP, subnet, routing<br>• Hiểu nền tảng bảo mật, Linux căn bản</p>
+  </div>
+  <div class="card"><h2>Sở thích</h2>
+    <p>Chụp hình, quay video, chỉnh sửa cơ bản, chơi game và xem phim để thư giãn và học hỏi thêm.</p>
+  </div>
+  <div class="card"><h2>Liên hệ</h2>
+    <p>Facebook: <a href="https://facebook.com/your.profile" target="_blank">facebook.com/your.profile</a><br>
+       Zalo: <a href="https://zalo.me/0xxxxxxxxx" target="_blank">zalo.me/0xxxxxxxxx</a><br>
+       SĐT: <a href="tel:0xxx">0xxx xxx xxx</a></p>
+  </div>
+  <div class="card"><h2>Timeline học tập</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <h3>2023</h3><span>Nhập học iSPACE</span>
+        <p>Bắt đầu học An ninh mạng, làm quen kiến thức cơ bản.</p>
+      </div>
+      <div class="timeline-item">
+        <h3>2024</h3><span>Thực hành dự án</span>
+        <p>Làm lab mạng, mô phỏng tấn công - phòng thủ, web security.</p>
+      </div>
+      <div class="timeline-item">
+        <h3>2025</h3><span>Định hướng chuyên sâu</span>
+        <p>Học pentest, CTF, chuẩn bị chứng chỉ bảo mật.</p>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>© <span id="year"></span> Cyber Portfolio • iSPACE</footer>
+
+<script>
+// timeline + reveal
+const cards=document.querySelectorAll('.card');
+const io=new IntersectionObserver(e=>{
+  e.forEach(x=>{
+    if(x.isIntersecting){
+      x.target.classList.add('show');
+      io.unobserve(x.target);
+    }
+  });
+},{threshold:.2});
+cards.forEach(c=>io.observe(c));
+document.getElementById('year').textContent=new Date().getFullYear();
+
+// code rain
+const c=document.getElementById("code");
+const ctx=c.getContext("2d");
+let w,h,cols,drops,fontSize=14;
+function resize(){
+  w=c.width=window.innerWidth;
+  h=c.height=window.innerHeight;
+  cols=Math.floor(w/fontSize);
+  drops=Array(cols).fill(0);
+}
+window.addEventListener("resize",resize);
+resize();
+const chars="01{}[]<>|/-=*#@$%:;abcdef";
+function draw(){
+  ctx.fillStyle="rgba(2,10,19,0.1)";
+  ctx.fillRect(0,0,w,h);
+  ctx.fillStyle="rgba(0,200,255,0.3)";
+  ctx.font=`${fontSize}px monospace`;
+  for(let i=0;i<cols;i++){
+    const ch=chars[Math.floor(Math.random()*chars.length)];
+    ctx.fillText(ch,i*fontSize,drops[i]*fontSize);
+    if(drops[i]*fontSize>h&&Math.random()>0.975)drops[i]=0;
+    drops[i]+=0.5;
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+</body>
+</html>
