@@ -1,7 +1,8 @@
 const {chromium}=require('playwright');const assert=require('node:assert/strict');
 (async()=>{
  const b=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox']});
- const p=await b.newPage({viewport:{width:1440,height:1000}});const errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto(process.env.BASE_URL||'http://127.0.0.1:8000/',{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);
+ const p=await b.newPage({viewport:{width:1440,height:1000}});const errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto(process.env.BASE_URL||'http://127.0.0.1:8000/',{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);await p.mouse.wheel(0,0); // User input stops the automatic tour; check manual building below.
+
  const startQ=await p.locator('#hero-title').evaluate(e=>e.style.getPropertyValue('--reveal'));assert.equal(startQ,'0','initial content is empty while cursors approach');await p.waitForTimeout(800);assert.equal(await p.locator('#hero-title').evaluate(e=>e.style.getPropertyValue('--reveal')),'0','the empty frame stage remains visible');await p.waitForTimeout(1800);const halfway=Number(await p.locator('#hero-title').evaluate(e=>e.style.getPropertyValue('--reveal')));assert.ok(halfway>0&&halfway<.9,'construction takes several seconds, not a quick fade');
   assert.equal(await p.locator('.living-cursor').count(),4);assert.equal(await p.locator('#build-progress').count(),0);
  await p.locator('#chat-launcher').click();await p.locator('#chat-input').fill('tôi buồn');await p.waitForTimeout(50);const beforePause=await p.locator('#hero-title').evaluate(e=>e.style.getPropertyValue('--reveal'));await p.waitForTimeout(250);assert.equal(await p.locator('#hero-title').evaluate(e=>e.style.getPropertyValue('--reveal')),beforePause);assert.equal(await p.locator('.swarm-layer').getAttribute('data-phase'),'PAUSED');await p.locator('#chat-close').click();
