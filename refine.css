@@ -2,7 +2,7 @@
 @font-face{font-family:'Be Vietnam Pro';src:url('assets/fonts/BeVietnamPro-Regular.woff') format('woff');font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:'Be Vietnam Pro';src:url('assets/fonts/BeVietnamPro-SemiBold.woff') format('woff');font-weight:500 600;font-style:normal;font-display:swap}
 @font-face{font-family:'Be Vietnam Pro';src:url('assets/fonts/BeVietnamPro-Bold.woff') format('woff');font-weight:700 900;font-style:normal;font-display:swap}
-:root{--font:'Be Vietnam Pro',system-ui,sans-serif;--mono:'Be Vietnam Pro',system-ui,sans-serif;--muted:#b3bbae;--bg:#111510}
+:root{--font:'Be Vietnam Pro',system-ui,sans-serif;--mono:'Be Vietnam Pro',system-ui,sans-serif;--muted:#b3bbae;--bg:#000}
 html{font-family:var(--font)}body,button,input,textarea,select{font-family:var(--font);font-synthesis:none}body{background-image:none;line-height:1.8}h1,h2,h3,h4{font-family:var(--font);font-synthesis:none;font-weight:600;line-height:1.26}
 h1{font-size:clamp(44px,5.9vw,80px);letter-spacing:-.045em;line-height:1.3;max-width:none}h2{letter-spacing:-.035em}.hero-statement{font-size:clamp(25px,2.8vw,38px);line-height:1.5;letter-spacing:-.025em}.hero-description{font-size:15px;line-height:1.95;max-width:470px}
 .site-header{min-height:88px}.brand{font-family:var(--font);font-weight:600;font-size:34px;letter-spacing:-2px}.brand-caption{font-size:9px;line-height:1.7}.header-status{font-size:10px;letter-spacing:.3px}.section-meta,.section-label{font-size:11px;letter-spacing:.4px}.eyebrow{font-size:11px;letter-spacing:.6px}.section-label{margin-bottom:35px}.section{padding:74px 0}.hero-grid{padding:40px 0 44px;gap:7%}.hero-bottom{font-size:10px;letter-spacing:0}.build-hint{max-width:340px}.build-hint span{display:none}
@@ -27,3 +27,13 @@ h1{font-size:clamp(44px,5.9vw,80px);letter-spacing:-.045em;line-height:1.3;max-w
 .tour-controls{position:fixed;z-index:50;top:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:12px;max-width:calc(100vw - 24px);padding:8px 12px;border:1px solid #4d6637;border-radius:8px;background:#111a10ed;font-size:11px;white-space:nowrap}
 .tour-controls button{font:inherit;background:transparent;color:var(--accent);border:1px solid #6d8f4a;border-radius:4px;padding:4px 8px;min-height:32px}
 @media(max-width:640px){.tour-controls{top:8px;font-size:10px;gap:8px;padding:5px 8px}}
+
+/* The document itself is black; every unbuilt atom is genuinely invisible. */
+html,body{background:#000}.section{border-top-color:transparent}
+.construction-mode .scroll-building:is([data-build-state=waiting],[data-build-state=approach],[data-build-state=frame]){visibility:hidden!important}
+.scroll-building[data-kind=surface]{clip-path:inset(0);opacity:var(--reveal)}
+.scroll-building[data-kind=place]{opacity:var(--reveal);transform:translate3d(calc((1 - var(--reveal))*24px),calc((1 - var(--reveal))*-16px),0)}
+.construction-mode .construction-ui{transition:opacity .9s ease;opacity:1}
+.construction-mode:not(.construction-ui-ready) .construction-ui{opacity:0;visibility:hidden;pointer-events:none}
+.portrait:has(.scroll-building) img{transform:none!important}.living-cursor svg{transform:translate(-2px,-2px)}
+@media(prefers-reduced-motion:reduce){.scroll-building{visibility:visible!important}.construction-ui{opacity:1!important;visibility:visible!important}}

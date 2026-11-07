@@ -3,44 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101310">
+  <meta name="theme-color" content="#000000">
   <meta name="description" content="Portfolio Hồng Gia Bảo — sinh viên An ninh mạng tại iSPACE, yêu công nghệ, quay chụp và những trải nghiệm web sáng tạo.">
   <title>Hồng Gia Bảo — Luôn tò mò, luôn khám phá.</title>
-  <style>html.intro-blank::before{content:"";position:fixed;inset:0;background:#000;z-index:2147483647;pointer-events:none}html.intro-blank body>*{visibility:hidden!important}</style>
+  <style>html.intro-blank::before{content:"";position:fixed;inset:0;background:#000;z-index:2147483647;pointer-events:none}html.intro-blank body>*,html.construction-pending body>*{visibility:hidden!important}html.construction-mode,html.construction-mode body{background:#000!important}</style>
   <script>
     // Hide the first paint, with a fail-open timeout if the animation script fails.
     try {
-      const saved=JSON.parse(localStorage.getItem('hb-display-v6')||'null');
+      const saved=JSON.parse(localStorage.getItem('hb-display-v9')||localStorage.getItem('hb-display-v6')||'null');
       if(!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&saved?.enabled!==false){
-        document.documentElement.classList.add('intro-blank');
-        window.portfolioBootFallback=setTimeout(()=>document.documentElement.classList.remove('intro-blank'),3500);
+        document.documentElement.classList.add('intro-blank','construction-pending','construction-mode');
+        window.portfolioBootFallback=setTimeout(()=>document.documentElement.classList.remove('intro-blank','construction-pending','construction-mode'),3500);
       }
     } catch {}
   </script>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23c4f46d'/%3E%3Ctext x='8' y='43' font-family='sans-serif' font-weight='bold' font-size='31'%3EHB%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=8">
-  <link rel="stylesheet" href="effects.css?v=8">
-  <link rel="stylesheet" href="living.css?v=8">
-  <link rel="stylesheet" href="refine.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="effects.css?v=9">
+  <link rel="stylesheet" href="living.css?v=9">
+  <link rel="stylesheet" href="refine.css?v=9">
   <link rel="preload" href="assets/fonts/BeVietnamPro-Regular.woff" as="font" type="font/woff" crossorigin>
-  <script src="tools.js?v=8" defer></script>
-  <script src="config.js?v=8" defer></script>
-  <script src="app.js?v=8" defer></script>
-  <script src="calendar.js?v=8" defer></script>
-  <script src="weather.js?v=8" defer></script>
-  <script src="conversation.js?v=8" defer></script>
-  <script src="local-ai.js?v=8" defer></script>
-  <script src="chat.js?v=8" defer></script>
-  <script src="interactions.js?v=8" defer></script>
+  <script src="tools.js?v=9" defer></script>
+  <script src="config.js?v=9" defer></script>
+  <script src="app.js?v=9" defer></script>
+  <script src="calendar.js?v=9" defer></script>
+  <script src="weather.js?v=9" defer></script>
+  <script src="conversation.js?v=9" defer></script>
+  <script src="local-ai.js?v=9" defer></script>
+  <script src="chat.js?v=9" defer></script>
+  <script src="interactions.js?v=9" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Đến nội dung chính</a>
-  <header class="site-header">
-    <a class="brand" href="#home" aria-label="Hồng Gia Bảo — Trang đầu">HB<span class="brand-dot">.</span><span class="brand-caption">HỒNG GIA BẢO<br>PERSONAL PORTFOLIO</span></a>
+  <header class="site-header build-item" data-kind="surface">
+    <a class="brand build-item build-chrome" data-kind="type" href="#home" aria-label="Hồng Gia Bảo — Trang đầu">HB<span class="brand-dot">.</span><span class="brand-caption">HỒNG GIA BẢO<br>PERSONAL PORTFOLIO</span></a>
     <nav aria-label="Điều hướng chính">
       <a href="#about">Giới thiệu</a><a href="#skills">Kỹ năng</a><a href="#projects">Dự án <span>04</span></a><a href="#contact">Liên hệ <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a>
     </nav>
-    <span class="header-status"><i></i> LUÔN ĐANG HỌC HỎI</span>
+    <span class="header-status build-item build-chrome" data-kind="type"><i></i> LUÔN ĐANG HỌC HỎI</span>
   </header>
   <main id="main">
     <section class="hero scene" id="home" aria-labelledby="hero-title">
@@ -53,10 +53,10 @@
           <p class="hero-description build-item" data-kind="type">Sinh viên An ninh mạng tại iSPACE.<br>Mình học cách công nghệ vận hành — và dùng sự sáng tạo để kể những câu chuyện của riêng mình.</p>
           <div class="hero-actions build-item" data-kind="frame"><a class="button primary" href="#projects">Khám phá dự án <span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a><a class="text-link" href="#contact">Kết nối với mình <span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a></div>
         </div>
-        <figure class="portrait build-item" data-kind="place">
-          <div class="portrait-top"><span>01 / THE HUMAN BEHIND</span><span class="tiny-cross">+</span></div>
-          <div class="portrait-image"><div class="avatar-fallback" aria-hidden="true">HB.</div><img src="avatar.jpg" width="640" height="640" alt="Ảnh đại diện Hồng Gia Bảo" fetchpriority="high"><span class="photo-corner corner-a"></span><span class="photo-corner corner-b"></span><span class="image-tag">STAY CURIOUS_</span></div>
-          <figcaption><span>HỒNG GIA BẢO</span><span><i class="status-dot"></i> ĐANG KHÁM PHÁ</span></figcaption>
+        <figure class="portrait build-item" data-kind="surface">
+          <div class="portrait-top build-item build-chrome" data-kind="type"><span>01 / THE HUMAN BEHIND</span><span class="tiny-cross">+</span></div>
+          <div class="portrait-image build-item" data-kind="place"><div class="avatar-fallback" aria-hidden="true">HB.</div><img src="avatar.jpg" width="640" height="640" alt="Ảnh đại diện Hồng Gia Bảo" fetchpriority="high"><span class="photo-corner corner-a"></span><span class="photo-corner corner-b"></span><span class="image-tag">STAY CURIOUS_</span></div>
+          <figcaption class="build-item build-chrome" data-kind="type"><span>HỒNG GIA BẢO</span><span><i class="status-dot"></i> ĐANG KHÁM PHÁ</span></figcaption>
           <span class="portrait-sticker" aria-hidden="true">&lt;/&gt;</span>
         </figure>
       </div>
@@ -100,11 +100,11 @@
     <section class="school scene section" id="school" aria-labelledby="school-title"><div class="section-label"><span>04 / NƠI MÌNH ĐANG LỚN LÊN</span><span>LEARN. CONNECT. GROW.</span></div><div class="school-grid"><div class="school-mark build-item" data-kind="frame">iSPACE<span>AN NINH MẠNG</span></div><div class="build-item" data-kind="type"><h2 id="school-title">Học hỏi hôm nay.<br><em>Vững bước ngày mai.</em></h2><p class="muted">Mình đang theo học ngành An ninh mạng và là cộng tác viên tuyển sinh tại Trường Cao đẳng An ninh mạng iSPACE.</p><div class="school-links"><a class="text-link" href="https://ispace.edu.vn/" target="_blank" rel="noopener noreferrer">Website iSPACE <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a><a class="text-link" href="https://www.google.com/maps/search/?api=1&query=Tr%C6%B0%E1%BB%9Dng%20Cao%20%C4%91%E1%BA%B3ng%20An%20ninh%20m%E1%BA%A1ng%20iSPACE" target="_blank" rel="noopener noreferrer">Chỉ đường <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a></div></div></div></section>
     <section class="contact scene section" id="contact" aria-labelledby="contact-title"><div class="section-label"><span>05 / GIỮ KẾT NỐI</span><span><i class="status-dot"></i> SAY HELLO</span></div><div class="contact-grid"><div><p class="eyebrow build-item" data-kind="type">MỘT CUỘC TRÒ CHUYỆN CÓ THỂ LÀ KHỞI ĐẦU.</p><h2 id="contact-title" class="build-item" data-kind="type">Có cùng<br><em>tần số?</em><span class="accent"><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></h2><p class="muted build-item" data-kind="type">Nói về công nghệ, chia sẻ ý tưởng,<br>hay đơn giản là chào nhau một tiếng.</p></div><div class="social-links"><a class="build-item" data-kind="align" href="https://www.facebook.com/share/17YPJnPHDH/" target="_blank" rel="noopener noreferrer"><span><small>01 / KẾT NỐI</small>Facebook</span><span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a><a class="build-item" data-kind="align" href="https://zalo.me/0815882673" target="_blank" rel="noopener noreferrer"><span><small>02 / TRÒ CHUYỆN</small>Zalo Chat</span><span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a><a class="build-item" data-kind="align" href="https://vm.tiktok.com/ZSHwtGHx442dK-eOVQW/" target="_blank" rel="noopener noreferrer"><span><small>03 / GÓC SÁNG TẠO</small>TikTok</span><span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a><span class="contact-confirm mono">✓ RẤT VUI ĐƯỢC BIẾT BẠN.</span></div></div></section>
   </main>
-  <footer><a class="footer-brand" href="#home">HB.</a><span>© <span id="year">2026</span> Hồng Gia Bảo.<br><span class="muted">Được tạo nên từ sự tò mò.</span></span><a href="#home">VỀ ĐẦU TRANG ↑</a></footer>
-  <aside id="tour-controls" class="tour-controls" hidden aria-label="Trình diễn dựng trang"><span>Tự dựng · Tự cuộn</span><button id="tour-stop" type="button">Dừng tự cuộn</button></aside>
-  <aside id="build-assist" class="build-assist" hidden><span id="build-message">Đang dựng vùng đang xem</span><progress id="view-build-meter" max="100" value="0" aria-label="Tiến độ dựng vùng đang xem"></progress><button id="reveal-now" type="button">Hiện ngay</button></aside>
-  <details hidden class="experience-controls swarm-controls" id="swarm-controls"><summary><span class="control-led" aria-hidden="true"></span> Hiệu ứng <span id="team-count">4</span><span class="control-chevron">⌃</span></summary><div class="swarm-settings"><button id="effects-toggle" aria-pressed="true">Hiệu ứng <span id="effects-state">Bật</span></button><label>Mức hoạt động <select id="activity"><option value="light">Nhẹ</option><option value="normal" selected>Thường</option><option value="lively">Sôi động</option></select></label><label>Tốc độ dựng <select id="build-speed"><option value="slow" selected>Chậm</option><option value="slower">Rất chậm</option><option value="quick">Nhanh</option></select></label><label>Cho con trỏ đi theo <input id="follow-pointer" type="checkbox"></label><button id="replay">Xem lại vùng đang xem</button><button id="tour-replay">Xem lại từ đầu · Tự cuộn</button><small>Dựng xong từng vùng rồi tự cuộn tiếp. Cuộn, chạm hoặc nhấn phím để dừng.</small></div></details>
-  <button class="assistant-launcher" id="chat-launcher" aria-label="Mở trợ lý Bảo Bot" aria-controls="chat-panel" aria-expanded="false" hidden><span class="bot-face" aria-hidden="true"><i></i><i></i><b></b></span><span class="bot-caption">Bảo Bot<small>Chào bạn!</small></span><span class="bot-light" aria-hidden="true"></span></button>
+  <footer class="build-item" data-kind="frame"><a class="footer-brand" href="#home">HB.</a><span>© <span id="year">2026</span> Hồng Gia Bảo.<br><span class="muted">Được tạo nên từ sự tò mò.</span></span><a href="#home">VỀ ĐẦU TRANG ↑</a></footer>
+  <aside id="tour-controls" class="tour-controls construction-ui" hidden aria-label="Trình diễn dựng trang"><span>Tự dựng · Tự cuộn</span><button id="tour-stop" type="button">Dừng tự cuộn</button></aside>
+  <aside id="build-assist" class="build-assist construction-ui" hidden><span id="build-message">Đang dựng vùng đang xem</span><progress id="view-build-meter" max="100" value="0" aria-label="Tiến độ dựng vùng đang xem"></progress><button id="reveal-now" type="button">Hiện ngay</button></aside>
+  <details hidden class="experience-controls swarm-controls construction-ui" id="swarm-controls"><summary><span class="control-led" aria-hidden="true"></span> Hiệu ứng <span id="team-count">4</span><span class="control-chevron">⌃</span></summary><div class="swarm-settings"><button id="effects-toggle" aria-pressed="true">Hiệu ứng <span id="effects-state">Bật</span></button><label>Mức hoạt động <select id="activity"><option value="light">Nhẹ</option><option value="normal" selected>Thường</option><option value="lively">Sôi động</option></select></label><label>Tốc độ dựng <select id="build-speed"><option value="slow" selected>Chậm</option><option value="slower">Rất chậm</option><option value="quick">Nhanh</option></select></label><label>Cho con trỏ đi theo <input id="follow-pointer" type="checkbox"></label><button id="replay">Xem lại vùng đang xem</button><button id="tour-replay">Xem lại từ đầu · Tự cuộn</button><small>Dựng xong từng vùng rồi tự cuộn tiếp. Cuộn, chạm hoặc nhấn phím để dừng.</small></div></details>
+  <button class="assistant-launcher construction-ui" id="chat-launcher" aria-label="Mở trợ lý Bảo Bot" aria-controls="chat-panel" aria-expanded="false" hidden><span class="bot-face" aria-hidden="true"><i></i><i></i><b></b></span><span class="bot-caption">Bảo Bot<small>Chào bạn!</small></span><span class="bot-light" aria-hidden="true"></span></button>
   <section class="chat-panel" id="chat-panel" role="dialog" aria-labelledby="chat-title" hidden>
     <header class="chat-header"><span class="mini-bot" aria-hidden="true">HB_</span><div><h2 id="chat-title">Bảo Bot</h2><p id="chat-mode">Thông tin Bảo · Thời tiết · Lịch</p></div><button id="chat-close" aria-label="Đóng trợ lý">×</button></header>
     <div class="assistant-tabs"><button id="show-chat" aria-pressed="true">Trò chuyện</button><button id="show-calendar" aria-pressed="false">Lịch</button><button id="show-weather" aria-pressed="false">Thời tiết</button><select id="chat-timezone" aria-label="Múi giờ"><option value="Asia/Ho_Chi_Minh">Việt Nam (UTC+7)</option><option value="Asia/Tokyo">Nhật Bản (UTC+9)</option><option value="UTC">UTC</option><option value="America/New_York">New York</option><option value="Europe/London">London</option></select></div>
