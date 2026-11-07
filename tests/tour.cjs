@@ -55,7 +55,7 @@ const base=process.env.BASE_URL||'http://127.0.0.1:8000/';
  const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
  const m=await mobile.newPage();m.on('pageerror',e=>errors.push(e.message));await m.goto(base);
  await m.waitForFunction(()=>document.body.dataset.tour==='building');
- assert.equal(await m.locator('.living-cursor').count(),2);await m.touchscreen.tap(200,200);
+ assert.equal(await m.locator('.living-cursor').count(),8);await m.touchscreen.tap(200,200);
  assert.equal(await m.locator('body').getAttribute('data-tour'),'off','touch takes control immediately');
  await m.waitForTimeout(100);assert.equal(await m.evaluate(()=>scrollY),0);await mobile.close();
 

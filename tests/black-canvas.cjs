@@ -36,7 +36,7 @@ function completelyBlack(buffer,label){
   await context.close();
  }
  const legacy=await browser.newPage();await legacy.addInitScript(()=>localStorage.setItem('hb-display-v9',JSON.stringify({enabled:true,follow:true,speed:'quick',activity:'light'})));
- await legacy.goto(base);assert.equal(await legacy.locator('.living-cursor').count(),5,'upgrading a stored light setting uses the new five-cursor default');assert.equal(await legacy.locator('#build-speed').inputValue(),'slow');assert.equal(await legacy.locator('#follow-pointer').isChecked(),false,'old flying cursors are not carried into the new construction experience');
+ await legacy.goto(base);assert.equal(await legacy.locator('.living-cursor').count(),8,'upgrading a stored light setting uses the new eight-cursor default');assert.equal(await legacy.locator('#build-speed').inputValue(),'slow');assert.equal(await legacy.locator('#follow-pointer').isChecked(),false,'old flying cursors are not carried into the new construction experience');
  assert.deepEqual(errors,[]);await browser.close();
  console.log('PASS: pixel-verified black whole document before and after intro, black future viewport, incremental text, frame before image, desktop/mobile, stable layout and migration of old flying cursors.');
 })().catch(e=>{console.error(e);process.exit(1)});

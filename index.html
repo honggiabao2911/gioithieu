@@ -19,20 +19,20 @@
     } catch {}
   </script>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23c4f46d'/%3E%3Ctext x='8' y='43' font-family='sans-serif' font-weight='bold' font-size='31'%3EHB%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=12">
-  <link rel="stylesheet" href="effects.css?v=12">
-  <link rel="stylesheet" href="living.css?v=12">
-  <link rel="stylesheet" href="refine.css?v=12">
+  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="effects.css?v=13">
+  <link rel="stylesheet" href="living.css?v=13">
+  <link rel="stylesheet" href="refine.css?v=13">
   <link rel="preload" href="assets/fonts/BeVietnamPro-Regular.woff" as="font" type="font/woff" crossorigin>
-  <script src="tools.js?v=12" defer></script>
-  <script src="config.js?v=12" defer></script>
-  <script src="app.js?v=12" defer></script>
-  <script src="calendar.js?v=12" defer></script>
-  <script src="weather.js?v=12" defer></script>
-  <script src="conversation.js?v=12" defer></script>
-  <script src="local-ai.js?v=12" defer></script>
-  <script src="chat.js?v=12" defer></script>
-  <script src="interactions.js?v=12" defer></script>
+  <script src="tools.js?v=13" defer></script>
+  <script src="config.js?v=13" defer></script>
+  <script src="app.js?v=13" defer></script>
+  <script src="calendar.js?v=13" defer></script>
+  <script src="weather.js?v=13" defer></script>
+  <script src="conversation.js?v=13" defer></script>
+  <script src="local-ai.js?v=13" defer></script>
+  <script src="chat.js?v=13" defer></script>
+  <script src="interactions.js?v=13" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Đến nội dung chính</a>
@@ -104,7 +104,7 @@
   <footer class="build-item" data-kind="frame"><a class="footer-brand" href="#home">HB.</a><span>© <span id="year">2026</span> Hồng Gia Bảo.<br><span class="muted">Được tạo nên từ sự tò mò.</span></span><a href="#home">VỀ ĐẦU TRANG ↑</a></footer>
   <aside id="tour-controls" class="tour-controls construction-ui" hidden aria-label="Trình diễn dựng trang"><span>Tự dựng · Tự cuộn</span><button id="tour-stop" type="button">Dừng tự cuộn</button></aside>
   <aside id="build-assist" class="build-assist construction-ui" hidden><span id="build-message">Đang dựng vùng đang xem</span><progress id="view-build-meter" max="100" value="0" aria-label="Tiến độ dựng vùng đang xem"></progress><button id="reveal-now" type="button">Hiện ngay</button></aside>
-  <details hidden class="experience-controls swarm-controls construction-ui" id="swarm-controls"><summary><span class="control-led" aria-hidden="true"></span> Hiệu ứng <span id="team-count">5</span><span class="control-chevron">⌃</span></summary><div class="swarm-settings"><button id="effects-toggle" aria-pressed="true">Hiệu ứng <span id="effects-state">Bật</span></button><label>Mức hoạt động <select id="activity"><option value="light">Nhẹ</option><option value="normal" selected>Thường</option><option value="lively">Sôi động</option></select></label><label>Tốc độ dựng <select id="build-speed"><option value="slow" selected>Chậm</option><option value="slower">Rất chậm</option><option value="quick">Nhanh</option></select></label><label>Cho con trỏ đi theo <input id="follow-pointer" type="checkbox"></label><button id="replay">Xem lại vùng đang xem</button><button id="tour-replay">Xem lại từ đầu · Tự cuộn</button><small>Dựng xong từng vùng rồi tự cuộn tiếp. Cuộn, chạm hoặc nhấn phím để dừng.</small></div></details>
+  <details hidden class="experience-controls swarm-controls construction-ui" id="swarm-controls"><summary><span class="control-led" aria-hidden="true"></span> Hiệu ứng <span id="team-count">8</span><span class="control-chevron">⌃</span></summary><div class="swarm-settings"><button id="effects-toggle" aria-pressed="true">Hiệu ứng <span id="effects-state">Bật</span></button><label>Tốc độ dựng <select id="build-speed"><option value="slow" selected>Chậm</option><option value="slower">Rất chậm</option><option value="quick">Nhanh</option></select></label><label>Cho con trỏ đi theo <input id="follow-pointer" type="checkbox"></label><button id="replay">Xem lại vùng đang xem</button><button id="tour-replay">Xem lại từ đầu · Tự cuộn</button><small>Dựng xong từng vùng rồi tự cuộn tiếp. Cuộn, chạm hoặc nhấn phím để dừng.</small></div></details>
   <button class="assistant-launcher construction-ui" id="chat-launcher" aria-label="Mở trợ lý Bảo Bot" aria-controls="chat-panel" aria-expanded="false" hidden><span class="bot-face" aria-hidden="true"><i></i><i></i><b></b></span><span class="bot-caption">Bảo Bot<small>Chào bạn!</small></span><span class="bot-light" aria-hidden="true"></span></button>
   <section class="chat-panel" id="chat-panel" role="dialog" aria-labelledby="chat-title" hidden>
     <header class="chat-header"><span class="mini-bot" aria-hidden="true">HB_</span><div><h2 id="chat-title">Bảo Bot</h2><p id="chat-mode">Thông tin Bảo · Thời tiết · Lịch</p></div><button id="chat-close" aria-label="Đóng trợ lý">×</button></header>
