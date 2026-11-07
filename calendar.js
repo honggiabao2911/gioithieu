@@ -8,6 +8,8 @@
     if (Array.isArray(data)) events = data.slice(0, 200).flatMap(e => { try { return [{ ...T.validateEvent(e), id: String(e.id).slice(0, 100) }]; } catch { return []; } });
   } catch { status.textContent = 'Chưa đọc được lịch trên thiết bị.'; }
   function tab(calendar) {
+    document.getElementById('weather-view').hidden = true;
+    document.getElementById('show-weather').setAttribute('aria-pressed','false');
     view.hidden = !calendar; chat.hidden = calendar;
     document.getElementById('show-chat').setAttribute('aria-pressed', String(!calendar));
     document.getElementById('show-calendar').setAttribute('aria-pressed', String(calendar));

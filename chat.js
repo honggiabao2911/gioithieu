@@ -7,10 +7,10 @@
  let history = [], pending = false, lastSent = -Infinity, controller = null, generation = 0, lastQuestion = '', location = null;
  let endpoint = '';
  try { const u = new URL(window.PORTFOLIO_CHAT_CONFIG?.endpoint || ''); if (u.protocol === 'https:' || u.protocol === 'http:' && ['localhost','127.0.0.1'].includes(u.hostname)) endpoint = u.href; } catch { /* Not configured. */ }
- const offlineBadge = 'Chưa kết nối AI · Giờ và lịch trên thiết bị';
+ const offlineBadge = 'Thông tin Bảo · Thời tiết · Lịch';
  badge.textContent = offlineBadge;
  const timezone = () => $('chat-timezone').value;
- const weatherIntent = text => /thoi tiet|mua|nhiet do|weather/.test(T.normalize(text));
+ const weatherIntent = text => /mưa/i.test(text) || /thoi tiet|nhiet do|weather|(?:co|troi|xac suat) mua|mua (?:o|tai|thu duc|ha noi)/.test(T.normalize(text));
  function safeURL(value) { try { const u = new URL(value); return ['https:','http:'].includes(u.protocol) && !u.username && !u.password ? u.href : null; } catch { return null; } }
  function save() {
    if (!$('remember-chat').checked) return;
@@ -45,10 +45,11 @@
  function guide(id) { if (!['projects','about','contact','school'].includes(id)) return; close(); window.PortfolioMotion?.guide(id); }
  function render(message) {
    const item = document.createElement('div'); item.className = `chat-message ${message.role}`;
-   const label = document.createElement('small'); label.textContent = message.role === 'user' ? 'BẠN' : message.origin === 'local' ? 'CÔNG CỤ CỤC BỘ · KHÔNG PHẢI AI' : 'BẢO BOT'; item.append(label);
+   const label = document.createElement('small'); label.textContent = message.role === 'user' ? 'BẠN' : message.origin === 'local' ? 'BẢO BOT' : 'BẢO BOT'; item.append(label);
    markdown(item, message.content);
    const action = message.action;
    if (['projects','about','school','contact'].includes(action)) actionButton(item, 'Mở mục liên quan ↗', () => guide(action));
+   if (action === 'weather') actionButton(item, 'Mở thời tiết', () => window.PortfolioWeather.open());
    if (action === 'calendar') actionButton(item, 'Mở lịch trên thiết bị', () => window.PortfolioCalendar.tab(true));
    if (Array.isArray(message.sources)) {
      const sources = document.createElement('div'); sources.className = 'chat-sources';
@@ -82,7 +83,7 @@
    messages.append(item); while (messages.children.length > 24) messages.firstElementChild.remove(); messages.scrollTop = messages.scrollHeight;
  }
  function append(message) { history.push(message); history = history.slice(-24); render(message); save(); }
- function greet() { append({ role: 'assistant', origin: 'local', content: 'Chào bạn! Mình có thể mở portfolio, xem giờ thực và quản lý lịch trên thiết bị. Hỏi đáp AI rộng, tra cứu web và thời tiết cần endpoint AI. Trạng thái kết nối luôn hiện ở phía trên.' }); }
+ function greet() { append({ role: 'assistant', origin: 'local', content: 'Chào bạn! Mình giúp bạn tìm hiểu về Gia Bảo, xem dự án, tra thời tiết và quản lý lịch. Bạn muốn xem điều gì?' }); }
  try {
    $('remember-chat').checked = localStorage.getItem('hb-chat-consent') === 'on';
    if ($('remember-chat').checked) {
@@ -102,18 +103,19 @@
      }
      const data = T.timeData(zone, now), date = T.relativeDate(question, now, zone);
      const day = date ? `${date} là ${new Intl.DateTimeFormat('vi-VN', { weekday: 'long', timeZone: 'UTC' }).format(new Date(date + 'T12:00:00Z'))}.\n` : '';
-     return { content: `${day}Hiện tại: ${data.time} · ${data.weekday}, ${data.date}\nMúi giờ: ${zone}. Tính từ đồng hồ thiết bị tại ${data.now}, không dùng kiến thức ghi nhớ của AI.` };
+     return { content: `${day}Hiện tại: ${data.time} · ${data.weekday}, ${data.date}\nMúi giờ: ${zone}. Theo đồng hồ thiết bị.` };
    }
    if (/ngay mai.*co gi|hom nay.*co gi|xem lich|tra lich/.test(q)) {
      const date = T.relativeDate(question, now, zone) || T.localDate(now, zone);
      const found = window.PortfolioCalendar.query({ date, timezone: zone });
      return { content: `Lịch trên thiết bị ngày ${date} (${zone}):\n${found.length ? found.join('\n') : 'Chưa có sự kiện nào.'}\nChưa kết nối Google/Microsoft Calendar; không có nhắc nền khi đóng trang.`, action: 'calendar' };
    }
-   if (!endpoint && /lich|buoi|su kien/.test(q)) return { content: 'Chưa kết nối AI để hiểu và soạn lịch từ yêu cầu tự nhiên. Bạn vẫn có thể dùng Lịch của tôi để thêm, sửa, xóa, tìm và xuất .ics. Khi thêm, hãy chọn đủ tên, ngày, giờ, thời lượng và múi giờ. Lịch chỉ lưu trên thiết bị sau khi bạn bấm Lưu.', action: 'calendar' };
-   if (!endpoint && weatherIntent(question)) return { content: location || /\bo\s+\S+|thu duc|ha noi|sai gon|ho chi minh/.test(q) ? 'Chưa kết nối backend AI/thời tiết nên mình chưa lấy được dữ liệu thật. Hãy cấu hình endpoint trước; mình không thể xác nhận hiện có mưa hoặc tự bịa dự báo.' : 'Bạn muốn xem thời tiết ở địa điểm nào? Nhập tên thành phố/tỉnh hoặc chọn “Dùng vị trí của tôi”. Việc lấy dữ liệu thật cần backend đã kết nối.' };
-   if (!endpoint && /du an|project|noel|20.10|trung thu/.test(q)) return { content: 'Thông tin portfolio có sẵn: bốn dự án của Bảo là Quà tặng 20.10, Noel, Chúc mừng và Thiệp Trung Thu.', action: 'projects' };
-   if (!endpoint && /bao.*hoc|ispace|an ninh/.test(q)) return { content: 'Thông tin portfolio có sẵn: Gia Bảo là tân sinh viên An ninh mạng tại iSPACE và cộng tác viên tuyển sinh cho trường.', action: 'school' };
-   if (!endpoint && /lien he|facebook|zalo/.test(q)) return { content: 'Bạn có thể kết nối qua Facebook, Zalo Chat hoặc TikTok trong mục Liên hệ.', action: 'contact' };
+   if (!endpoint && /lich|buoi|su kien/.test(q)) return { content: 'Bạn có thể thêm lịch ở tab Lịch, chọn tên, ngày, giờ và thời lượng rồi bấm Lưu. Lịch được giữ trên thiết bị và có thể xuất .ics. Việc tự soạn lịch từ hội thoại cần kết nối AI riêng.', action: 'calendar' };
+   if (/du an|project|noel|20.10|trung thu/.test(q)) return { content: 'Thông tin portfolio có sẵn: bốn dự án của Bảo là Quà tặng 20.10, Noel, Chúc mừng và Thiệp Trung Thu.', action: 'projects' };
+   if (/bao.*hoc|ispace|an ninh/.test(q)) return { content: 'Thông tin portfolio có sẵn: Gia Bảo là tân sinh viên An ninh mạng tại iSPACE và cộng tác viên tuyển sinh cho trường.', action: 'school' };
+   if (/lien he|facebook|zalo/.test(q)) return { content: 'Bạn có thể kết nối qua Facebook, Zalo Chat hoặc TikTok trong mục Liên hệ.', action: 'contact' };
+   if (/\bbao\b.*\bla ai\b|^(hong gia |gia )?bao[?!.]*$|gioi thieu.*bao|bao la nguoi/.test(q)) return { content: 'Hồng Gia Bảo là tân sinh viên ngành An ninh mạng tại iSPACE và cộng tác viên tuyển sinh cho trường. Bảo thích tìm hiểu công nghệ, quay chụp và dựng video bằng CapCut. Portfolio này giới thiệu việc học, kỹ năng và bốn dự án web cá nhân của Bảo.', action: 'about' };
+   if (/ky nang|capcut|python|quay chup|phan cung/.test(q) && !/lich|buoi/.test(q)) return { content: 'Bảo đang học An ninh mạng nhập môn, tìm hiểu phần cứng và Python. Bảo cũng thích quay chụp, chỉnh sửa video TikTok/Trend bằng CapCut và làm việc nhóm.', action: 'about' };
    return null;
  }
  function busy(on) { pending = on; $('chat-send').disabled = on; suggestions.forEach(b => { b.disabled = on; }); $('chat-stop').hidden = !on; launcher.dataset.state = on ? 'thinking' : panel.hidden ? 'waiting' : 'replying'; panel.setAttribute('aria-busy', String(on)); }
@@ -144,12 +146,21 @@
    if (retry && previous.at(-1)?.role === 'user' && previous.at(-1)?.content === question) previous.pop();
    while (previous.reduce((n, m) => n + m.content.length, 0) > 5500) previous.shift();
    if (!retry) append({ role: 'user', content: question }); input.value = '';
-   busy(true); status.textContent = endpoint ? 'Đang yêu cầu backend xử lý…' : 'Đang xử lý bằng công cụ cục bộ…';
+   busy(true); status.textContent = endpoint ? 'Đang trả lời…' : 'Đang tìm thông tin…';
    let timer;
    try {
+     if (weatherIntent(question)) {
+       const place=window.PortfolioWeather.placeFromText(question);
+       if(!place&&!location){append({role:'assistant',origin:'local',content:'Bạn muốn xem thời tiết ở đâu? Hãy nhập tên địa điểm, ví dụ “Thời tiết Thủ Đức”, hoặc mở tab Thời tiết để dùng vị trí của bạn.'});status.textContent='Chọn địa điểm để lấy dữ liệu thời tiết.';return;}
+       const currentController=new AbortController();controller=currentController;status.textContent='Đang lấy dữ liệu thời tiết từ Open-Meteo…';
+       const date=T.relativeDate(question,new Date(),timezone());
+       const data=await window.PortfolioWeather.lookup({place,coordinates:place?null:location,timezone:timezone(),date,signal:currentController.signal});
+       if(generation!==token)return;
+       append({role:'assistant',origin:'local',content:window.PortfolioWeather.describe(data,question),sources:[{...data.source,accessedAt:data.fetchedAt}]});status.textContent='Dữ liệu Open-Meteo · Không cần AI hoặc API key.';return;
+     }
      const local = localReply(question);
-     if (local) { append({ role: 'assistant', origin: 'local', ...local }); status.textContent = 'Kết quả cục bộ trên thiết bị · Không gọi mô hình AI.'; return; }
-     if (!endpoint) { append({ role: 'assistant', origin: 'local', content: 'Chưa kết nối AI. Mình chưa thể trả lời rộng hoặc tra cứu thông tin mới. Bạn vẫn dùng được giờ thực, lịch trên thiết bị và thông tin portfolio. Cần cấu hình endpoint riêng để bật AI, web và thời tiết.' }); status.textContent = 'Chưa gửi yêu cầu tới mô hình AI.'; return; }
+     if (local) { append({ role: 'assistant', origin: 'local', ...local }); status.textContent = 'Bạn có thể hỏi tiếp hoặc chọn một mục bên dưới.'; return; }
+     if (!endpoint) { append({ role: 'assistant', origin: 'local', content: 'Mình chưa có câu trả lời cho câu này. Hiện mình có thể giúp về Gia Bảo, dự án, thời tiết, giờ và lịch. Hỏi đáp tổng quát cần kết nối AI riêng.' }); status.textContent = 'Chưa gửi yêu cầu tới mô hình AI.'; return; }
      const currentController = new AbortController(); controller = currentController; timer = setTimeout(() => currentController.abort('timeout'), 35000);
      const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/x-ndjson' }, body: JSON.stringify({ message: question, history: previous, timezone: timezone(), sentAt: new Date().toISOString(), ...(location && weatherIntent(question) ? { location } : {}) }), signal: currentController.signal, credentials: 'omit', referrerPolicy: 'no-referrer' });
      if (!response.ok) throw new Error(response.status === 429 ? 'rate_limit' : response.status === 503 ? 'backend_not_configured' : 'connection');
@@ -162,7 +173,8 @@
    } catch (error) {
      if (generation !== token) return;
      badge.textContent = offlineBadge;
-     status.textContent = error.message === 'rate_limit' ? 'Backend giới hạn lượt gửi. Hãy đợi rồi thử lại; chưa có câu trả lời mới.' : error.message === 'backend_not_configured' ? 'Backend chưa có cấu hình AI hợp lệ. Không có kết quả AI.' : controller?.signal.aborted ? 'Đã dừng hoặc hết thời gian chờ. Chưa nhận câu trả lời hoàn chỉnh.' : 'Mất kết nối hoặc phản hồi không hợp lệ. Không có kết quả mới; hãy thử lại.';
+     if(weatherIntent(question)){status.textContent=window.PortfolioWeather.errorText(error);$('chat-retry').hidden=false;return;}
+     status.textContent = error.message === 'rate_limit' ? 'Backend giới hạn lượt gửi. Hãy đợi rồi thử lại; chưa có câu trả lời mới.' : error.message === 'backend_not_configured' ? 'Trợ lý AI chưa sẵn sàng. Bạn vẫn có thể dùng thông tin Bảo, thời tiết và lịch.' : controller?.signal.aborted ? 'Đã dừng hoặc hết thời gian chờ. Chưa nhận câu trả lời hoàn chỉnh.' : 'Mất kết nối hoặc phản hồi không hợp lệ. Không có kết quả mới; hãy thử lại.';
      $('chat-retry').hidden = false;
    } finally { clearTimeout(timer); if (generation === token) { controller = null; busy(false); } }
  }

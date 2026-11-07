@@ -7,15 +7,18 @@
   <meta name="description" content="Portfolio Hồng Gia Bảo — sinh viên An ninh mạng tại iSPACE, yêu công nghệ, quay chụp và những trải nghiệm web sáng tạo.">
   <title>Hồng Gia Bảo — Luôn tò mò, luôn khám phá.</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23c4f46d'/%3E%3Ctext x='8' y='43' font-family='sans-serif' font-weight='bold' font-size='31'%3EHB%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=5">
-  <link rel="stylesheet" href="effects.css?v=5">
-  <link rel="stylesheet" href="living.css?v=5">
-  <script src="tools.js?v=5" defer></script>
-  <script src="config.js?v=5" defer></script>
-  <script src="app.js?v=5" defer></script>
-  <script src="calendar.js?v=5" defer></script>
-  <script src="chat.js?v=5" defer></script>
-  <script src="interactions.js?v=5" defer></script>
+  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="effects.css?v=6">
+  <link rel="stylesheet" href="living.css?v=6">
+  <link rel="stylesheet" href="refine.css?v=6">
+  <link rel="preload" href="assets/fonts/BeVietnamPro-Regular.woff" as="font" type="font/woff" crossorigin>
+  <script src="tools.js?v=6" defer></script>
+  <script src="config.js?v=6" defer></script>
+  <script src="app.js?v=6" defer></script>
+  <script src="calendar.js?v=6" defer></script>
+  <script src="weather.js?v=6" defer></script>
+  <script src="chat.js?v=6" defer></script>
+  <script src="interactions.js?v=6" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Đến nội dung chính</a>
@@ -44,14 +47,9 @@
           <span class="portrait-sticker" aria-hidden="true">&lt;/&gt;</span>
         </figure>
       </div>
-      <div class="hero-bottom"><a href="#about">↓ CUỘN ĐỂ KHÁM PHÁ</a><span class="build-hint">Tự dựng khi mở trang · Sau đó bay theo bạn <span>↙</span></span></div>
+      <div class="hero-bottom"><a href="#about">↓ CUỘN ĐỂ KHÁM PHÁ</a><span class="build-hint">Cuộn để khám phá · Từng phần nhẹ nhàng hiện ra <span>↙</span></span></div>
     </section>
     <div class="interest-strip" aria-label="Những điều mình quan tâm"><span>AN NINH MẠNG</span><b>✳</b><span>CÔNG NGHỆ</span><b>✳</b><span>QUAY & CHỤP</span><b>✳</b><span>SÁNG TẠO</span><b>✳</b><span>KHÔNG NGỪNG HỌC</span></div>
-    <section class="playground section" id="playground" aria-labelledby="playground-title">
-      <div class="section-label"><span>LIVE / CURSOR COLLECTIVE</span><span>MÔ PHỎNG CỤC BỘ · KHÔNG PHẢI AI</span></div>
-      <div class="playground-grid"><div><span class="eyebrow">MỘT GÓC INTERNET CÓ SỰ SỐNG</span><h2 id="playground-title">Một đội nhỏ.<br>Luôn có việc <em>để làm.</em></h2><p class="muted">Di chuột, cả đàn sẽ đáp lại. Dừng tay một chút, chúng tự tìm việc: dựng khung, đặt nhãn, nối mạng và căn chỉnh. Bạn không cần cuộn để bắt đầu.</p><div class="lab-status"><i class="status-dot"></i><span id="swarm-status">Đang khởi động đội con trỏ…</span></div></div>
-      <div class="lab-terminal" data-swarm-target><div class="terminal-bar"><span><i></i><i></i><i></i></span><span>COLLECTIVE / LOCAL SESSION</span><span aria-hidden="true">⌘</span></div><div class="terminal-body"><div class="terminal-command">&gt; collective.start()</div><div class="wire-space" data-swarm-target><span class="wire-node node-one"></span><span class="wire-node node-two"></span><span class="wire-node node-three"></span><span class="wire-caption">QUAN SÁT → PHỐI HỢP → KHÁM PHÁ</span></div><div id="task-log" class="task-log" role="log" aria-label="Nhật ký công việc"><p>Đội con trỏ sẵn sàng. Hãy nghỉ tay một chút.</p></div></div><div class="terminal-bottom"><span>THAO TÁC TRANG TRÍ · NỘI DUNG LUÔN GIỮ NGUYÊN</span><span><b id="task-count">0</b> HOÀN TẤT</span></div></div></div>
-    </section>
     <section class="about scene section" id="about" aria-labelledby="about-title">
       <div class="section-label"><span>01 / GIỚI THIỆU</span><span>MỘT CHÚT VỀ MÌNH</span></div>
       <div class="about-grid">
@@ -90,18 +88,17 @@
     <section class="contact scene section" id="contact" aria-labelledby="contact-title"><div class="section-label"><span>05 / GIỮ KẾT NỐI</span><span><i class="status-dot"></i> SAY HELLO</span></div><div class="contact-grid"><div><p class="eyebrow build-item" data-kind="type">MỘT CUỘC TRÒ CHUYỆN CÓ THỂ LÀ KHỞI ĐẦU.</p><h2 id="contact-title" class="build-item" data-kind="type">Có cùng<br><em>tần số?</em><span class="accent"><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></h2><p class="muted build-item" data-kind="type">Nói về công nghệ, chia sẻ ý tưởng,<br>hay đơn giản là chào nhau một tiếng.</p></div><div class="social-links"><a class="build-item" data-kind="align" href="https://www.facebook.com/share/17YPJnPHDH/" target="_blank" rel="noopener noreferrer"><span><small>01 / KẾT NỐI</small>Facebook</span><span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a><a class="build-item" data-kind="align" href="https://zalo.me/0815882673" target="_blank" rel="noopener noreferrer"><span><small>02 / TRÒ CHUYỆN</small>Zalo Chat</span><span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a><a class="build-item" data-kind="align" href="https://vm.tiktok.com/ZSHwtGHx442dK-eOVQW/" target="_blank" rel="noopener noreferrer"><span><small>03 / GÓC SÁNG TẠO</small>TikTok</span><span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a><span class="contact-confirm mono">✓ RẤT VUI ĐƯỢC BIẾT BẠN.</span></div></div></section>
   </main>
   <footer><a class="footer-brand" href="#home">HB.</a><span>© <span id="year">2026</span> Hồng Gia Bảo.<br><span class="muted">Được tạo nên từ sự tò mò.</span></span><a href="#home">VỀ ĐẦU TRANG ↑</a></footer>
-  <aside class="build-progress" id="build-progress" hidden aria-label="Tiến độ dựng toàn trang"><div><span id="build-caption">Đội đang dựng toàn bộ website</span><b id="build-percent">0%</b></div><progress id="build-meter" max="100" value="0">0%</progress><button id="build-skip">Hoàn thiện ngay</button></aside>
-  <details hidden class="experience-controls swarm-controls" id="swarm-controls"><summary><span class="control-led" aria-hidden="true"></span> Đội con trỏ <span id="team-count">10</span><span class="control-chevron">⌃</span></summary><div class="swarm-settings"><button id="effects-toggle" aria-pressed="true">Hiệu ứng <span id="effects-state">Bật</span></button><label>Mức hoạt động <select id="activity"><option value="light">Nhẹ</option><option value="normal" selected>Thường</option><option value="lively">Sôi động</option></select></label><label>Đi theo chuột thật <input id="follow-pointer" type="checkbox" checked></label><label>Tự làm khi rảnh <input id="idle-work" type="checkbox" checked></label><button id="replay">↻ Dựng lại</button><small>Nội dung luôn sẵn sàng. Chỉ là những người bạn trang trí.</small></div></details>
-  <button class="assistant-launcher" id="chat-launcher" aria-label="Mở trợ lý Bảo Bot" aria-controls="chat-panel" aria-expanded="false" hidden><span class="bot-face" aria-hidden="true"><i></i><i></i><b></b></span><span class="bot-caption">BẢO BOT<small>Chào bạn!</small></span><span class="bot-light" aria-hidden="true"></span></button>
+  <details hidden class="experience-controls swarm-controls" id="swarm-controls"><summary><span class="control-led" aria-hidden="true"></span> Hiệu ứng <span id="team-count">4</span><span class="control-chevron">⌃</span></summary><div class="swarm-settings"><button id="effects-toggle" aria-pressed="true">Hiệu ứng <span id="effects-state">Bật</span></button><label>Mức hoạt động <select id="activity"><option value="light">Nhẹ</option><option value="normal" selected>Thường</option><option value="lively">Sôi động</option></select></label><label>Cho con trỏ đi theo <input id="follow-pointer" type="checkbox"></label><button id="replay">Xem lại hiệu ứng</button><small>Chỉ dựng mục đang xem. Nhãn tự ẩn khi hoàn tất.</small></div></details>
+  <button class="assistant-launcher" id="chat-launcher" aria-label="Mở trợ lý Bảo Bot" aria-controls="chat-panel" aria-expanded="false" hidden><span class="bot-face" aria-hidden="true"><i></i><i></i><b></b></span><span class="bot-caption">Bảo Bot<small>Chào bạn!</small></span><span class="bot-light" aria-hidden="true"></span></button>
   <section class="chat-panel" id="chat-panel" role="dialog" aria-labelledby="chat-title" hidden>
-    <header class="chat-header"><span class="mini-bot" aria-hidden="true">HB_</span><div><h2 id="chat-title">Bảo Bot</h2><p id="chat-mode">Chưa kết nối AI · Giờ và lịch trên thiết bị</p></div><button id="chat-close" aria-label="Đóng trợ lý">×</button></header>
-    <div class="assistant-tabs"><button id="show-chat" aria-pressed="true">Trò chuyện</button><button id="show-calendar" aria-pressed="false">Lịch của tôi</button><select id="chat-timezone" aria-label="Múi giờ"><option value="Asia/Ho_Chi_Minh">Việt Nam (UTC+7)</option><option value="Asia/Tokyo">Nhật Bản (UTC+9)</option><option value="UTC">UTC</option><option value="America/New_York">New York</option><option value="Europe/London">London</option></select></div>
+    <header class="chat-header"><span class="mini-bot" aria-hidden="true">HB_</span><div><h2 id="chat-title">Bảo Bot</h2><p id="chat-mode">Thông tin Bảo · Thời tiết · Lịch</p></div><button id="chat-close" aria-label="Đóng trợ lý">×</button></header>
+    <div class="assistant-tabs"><button id="show-chat" aria-pressed="true">Trò chuyện</button><button id="show-calendar" aria-pressed="false">Lịch</button><button id="show-weather" aria-pressed="false">Thời tiết</button><select id="chat-timezone" aria-label="Múi giờ"><option value="Asia/Ho_Chi_Minh">Việt Nam (UTC+7)</option><option value="Asia/Tokyo">Nhật Bản (UTC+9)</option><option value="UTC">UTC</option><option value="America/New_York">New York</option><option value="Europe/London">London</option></select></div>
     <div id="chat-view" class="chat-view">
     <div class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
-    <div class="chat-suggestions" aria-label="Câu hỏi gợi ý"><button data-question="Mấy giờ rồi?">Giờ hiện tại</button><button data-question="Chiều nay có mưa không?">Thời tiết</button><button data-question="Xếp lịch học Python ba buổi tuần này">Lập lịch học</button><button data-question="Xem các dự án">Dự án</button></div>
-    <p class="chat-status" id="chat-status" role="status">Mình ở đây để giúp bạn khám phá portfolio.</p>
-    <div class="chat-request-actions"><button id="chat-location">Dùng vị trí của tôi</button><button id="chat-stop" hidden>Dừng trả lời</button><button id="chat-retry" hidden>Thử lại</button></div>
-    <form id="chat-form"><label class="sr-only" for="chat-input">Tin nhắn cho trợ lý</label><input id="chat-input" name="message" maxlength="600" autocomplete="off" placeholder="Bạn muốn biết điều gì về Bảo?" required><button id="chat-send" type="submit" aria-label="Gửi tin nhắn">↑</button></form>
+    <div class="chat-suggestions" aria-label="Câu hỏi gợi ý"><button data-question="Bảo là ai?">Bảo là ai?</button><button data-question="Thời tiết Thủ Đức hôm nay">Thời tiết</button><button data-question="Xếp lịch học Python ba buổi tuần này">Lịch học</button><button data-question="Xem các dự án">Dự án</button></div>
+    <p class="chat-status" id="chat-status" role="status">Bạn có thể hỏi về Bảo hoặc xem thời tiết theo địa điểm.</p>
+    <div class="chat-request-actions"><button id="chat-location" hidden>Dùng vị trí của tôi</button><button id="chat-stop" hidden>Dừng trả lời</button><button id="chat-retry" hidden>Thử lại</button></div>
+    <form id="chat-form"><label class="sr-only" for="chat-input">Tin nhắn cho trợ lý</label><input id="chat-input" name="message" maxlength="600" autocomplete="off" placeholder="Hỏi về Bảo, thời tiết hoặc lịch…" required><button id="chat-send" type="submit" aria-label="Gửi tin nhắn">↑</button></form>
     <div class="chat-footer"><label><input id="remember-chat" type="checkbox"> Lưu hội thoại trên thiết bị</label><button id="chat-clear">Xóa hội thoại</button></div>
     </div>
     <div id="calendar-view" class="calendar-view" hidden>
@@ -117,6 +114,11 @@
         <div class="calendar-actions"><button type="submit">Lưu trên thiết bị</button><button type="button" id="calendar-cancel">Hủy</button></div>
       </form>
       <p id="calendar-status" role="status"></p><div id="calendar-list"></div>
+    </div>
+    <div id="weather-view" class="calendar-view weather-view" hidden>
+      <h3>Thời tiết nơi bạn quan tâm</h3><p class="weather-intro">Dữ liệu Open-Meteo, dùng trực tiếp không cần kết nối AI.</p>
+      <form id="weather-form"><label for="weather-place">Thành phố hoặc khu vực</label><input id="weather-place" name="place" placeholder="Ví dụ: Thủ Đức, Hà Nội, Đà Nẵng" maxlength="120" required><div class="calendar-actions"><button type="submit" id="weather-submit">Xem thời tiết</button><button type="button" id="weather-location">Vị trí của tôi</button></div></form>
+      <p id="weather-status" role="status">Nhập địa điểm để xem điều kiện hiện tại và dự báo.</p><div id="weather-report"></div>
     </div>
   </section>
   <div class="sr-only" id="announcement" aria-live="polite"></div>
