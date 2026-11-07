@@ -45,7 +45,7 @@
  function guide(id) { if (!['projects','about','contact','school'].includes(id)) return; close(); window.PortfolioMotion?.guide(id); }
  function render(message) {
    const item = document.createElement('div'); item.className = `chat-message ${message.role}`;
-   const label = document.createElement('small'); label.textContent = message.role === 'user' ? 'BẠN' : message.origin === 'local' ? 'BẢO BOT' : 'BẢO BOT'; item.append(label);
+   const label = document.createElement('small'); label.textContent = message.role === 'user' ? 'BẠN' : message.origin === 'basic' ? 'BẢO BOT · PHẢN HỒI CƠ BẢN' : message.origin==='device'?'BẢO BOT · AI TRÊN MÁY':'BẢO BOT'; item.append(label);
    markdown(item, message.content);
    const action = message.action;
    if (['projects','about','school','contact'].includes(action)) actionButton(item, 'Mở mục liên quan ↗', () => guide(action));
@@ -110,12 +110,12 @@
      const found = window.PortfolioCalendar.query({ date, timezone: zone });
      return { content: `Lịch trên thiết bị ngày ${date} (${zone}):\n${found.length ? found.join('\n') : 'Chưa có sự kiện nào.'}\nChưa kết nối Google/Microsoft Calendar; không có nhắc nền khi đóng trang.`, action: 'calendar' };
    }
-   if (!endpoint && /lich|buoi|su kien/.test(q)) return { content: 'Bạn có thể thêm lịch ở tab Lịch, chọn tên, ngày, giờ và thời lượng rồi bấm Lưu. Lịch được giữ trên thiết bị và có thể xuất .ics. Việc tự soạn lịch từ hội thoại cần kết nối AI riêng.', action: 'calendar' };
+   if (!endpoint && !window.PortfolioLocalAI?.ready() && /lich|buoi|su kien/.test(q)) return { content: 'Bạn có thể thêm lịch ở tab Lịch, chọn tên, ngày, giờ và thời lượng rồi bấm Lưu. Lịch được giữ trên thiết bị và có thể xuất .ics. Việc tự soạn lịch từ hội thoại cần kết nối AI riêng.', action: 'calendar' };
    if (/du an|project|noel|20.10|trung thu/.test(q)) return { content: 'Thông tin portfolio có sẵn: bốn dự án của Bảo là Quà tặng 20.10, Noel, Chúc mừng và Thiệp Trung Thu.', action: 'projects' };
    if (/bao.*hoc|ispace|an ninh/.test(q)) return { content: 'Thông tin portfolio có sẵn: Gia Bảo là tân sinh viên An ninh mạng tại iSPACE và cộng tác viên tuyển sinh cho trường.', action: 'school' };
    if (/lien he|facebook|zalo/.test(q)) return { content: 'Bạn có thể kết nối qua Facebook, Zalo Chat hoặc TikTok trong mục Liên hệ.', action: 'contact' };
    if (/\bbao\b.*\bla ai\b|^(hong gia |gia )?bao[?!.]*$|gioi thieu.*bao|bao la nguoi/.test(q)) return { content: 'Hồng Gia Bảo là tân sinh viên ngành An ninh mạng tại iSPACE và cộng tác viên tuyển sinh cho trường. Bảo thích tìm hiểu công nghệ, quay chụp và dựng video bằng CapCut. Portfolio này giới thiệu việc học, kỹ năng và bốn dự án web cá nhân của Bảo.', action: 'about' };
-   if (/ky nang|capcut|python|quay chup|phan cung/.test(q) && !/lich|buoi/.test(q)) return { content: 'Bảo đang học An ninh mạng nhập môn, tìm hiểu phần cứng và Python. Bảo cũng thích quay chụp, chỉnh sửa video TikTok/Trend bằng CapCut và làm việc nhóm.', action: 'about' };
+   if (/ky nang cua bao|bao.*(?:ky nang|python|capcut|quay chup|phan cung)|(?:python|capcut|quay chup|phan cung).*bao|^ky nang[?!.]*$/.test(q) && !/lich|buoi/.test(q)) return { content: 'Bảo đang học An ninh mạng nhập môn, tìm hiểu phần cứng và Python. Bảo cũng thích quay chụp, chỉnh sửa video TikTok/Trend bằng CapCut và làm việc nhóm.', action: 'about' };
    return null;
  }
  function busy(on) { pending = on; $('chat-send').disabled = on; suggestions.forEach(b => { b.disabled = on; }); $('chat-stop').hidden = !on; launcher.dataset.state = on ? 'thinking' : panel.hidden ? 'waiting' : 'replying'; panel.setAttribute('aria-busy', String(on)); }
@@ -147,7 +147,7 @@
    while (previous.reduce((n, m) => n + m.content.length, 0) > 5500) previous.shift();
    if (!retry) append({ role: 'user', content: question }); input.value = '';
    busy(true); status.textContent = endpoint ? 'Đang trả lời…' : 'Đang tìm thông tin…';
-   let timer;
+   let timer,deviceRequested=false;
    try {
      if (weatherIntent(question)) {
        const place=window.PortfolioWeather.placeFromText(question);
@@ -160,7 +160,16 @@
      }
      const local = localReply(question);
      if (local) { append({ role: 'assistant', origin: 'local', ...local }); status.textContent = 'Bạn có thể hỏi tiếp hoặc chọn một mục bên dưới.'; return; }
-     if (!endpoint) { append({ role: 'assistant', origin: 'local', content: 'Mình chưa có câu trả lời cho câu này. Hiện mình có thể giúp về Gia Bảo, dự án, thời tiết, giờ và lịch. Hỏi đáp tổng quát cần kết nối AI riêng.' }); status.textContent = 'Chưa gửi yêu cầu tới mô hình AI.'; return; }
+     if(window.PortfolioLocalAI?.ready()){
+       deviceRequested=true;
+       const localController=new AbortController();controller=localController;timer=setTimeout(()=>localController.abort('timeout'),90000);status.textContent='AI trên máy đang trả lời…';
+       const reply=await window.PortfolioLocalAI.generate(question,previous,{signal:localController.signal});if(generation!==token)return;
+       append({role:'assistant',origin:'device',content:reply});badge.textContent='AI trên máy · Không phí API';status.textContent='Phản hồi từ mô hình chạy trên thiết bị · Không có lượt tra cứu web.';return;
+     }
+     if (!endpoint) {
+       const conversation=window.PortfolioConversation.reply(question,previous);
+       if(conversation){append({role:'assistant',origin:'basic',...conversation});badge.textContent='Trò chuyện cơ bản · Chưa kết nối AI';status.textContent='Bạn có thể chia sẻ thêm nếu muốn.';return;}
+       append({ role: 'assistant', origin: 'local', content: 'Mình chưa có câu trả lời cho câu này. Hiện mình có thể giúp về Gia Bảo, dự án, thời tiết, giờ và lịch. Hỏi đáp tổng quát cần kết nối AI riêng.' }); status.textContent = 'Chưa gửi yêu cầu tới mô hình AI.'; return; }
      const currentController = new AbortController(); controller = currentController; timer = setTimeout(() => currentController.abort('timeout'), 35000);
      const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/x-ndjson' }, body: JSON.stringify({ message: question, history: previous, timezone: timezone(), sentAt: new Date().toISOString(), ...(location && weatherIntent(question) ? { location } : {}) }), signal: currentController.signal, credentials: 'omit', referrerPolicy: 'no-referrer' });
      if (!response.ok) throw new Error(response.status === 429 ? 'rate_limit' : response.status === 503 ? 'backend_not_configured' : 'connection');
@@ -173,17 +182,19 @@
    } catch (error) {
      if (generation !== token) return;
      badge.textContent = offlineBadge;
+     if(deviceRequested){status.textContent=(controller?.signal.aborted||error.name==='AbortError')?'Đã dừng câu trả lời trên máy.':'AI trên máy chưa trả lời được. Hãy thử tin nhắn ngắn hơn hoặc tắt/bật lại AI trên máy.';$('chat-retry').hidden=false;return;}
      if(weatherIntent(question)){status.textContent=window.PortfolioWeather.errorText(error);$('chat-retry').hidden=false;return;}
-     status.textContent = error.message === 'rate_limit' ? 'Backend giới hạn lượt gửi. Hãy đợi rồi thử lại; chưa có câu trả lời mới.' : error.message === 'backend_not_configured' ? 'Trợ lý AI chưa sẵn sàng. Bạn vẫn có thể dùng thông tin Bảo, thời tiết và lịch.' : controller?.signal.aborted ? 'Đã dừng hoặc hết thời gian chờ. Chưa nhận câu trả lời hoàn chỉnh.' : 'Mất kết nối hoặc phản hồi không hợp lệ. Không có kết quả mới; hãy thử lại.';
+     status.textContent = error.message === 'rate_limit' ? 'Backend giới hạn lượt gửi. Hãy đợi rồi thử lại; chưa có câu trả lời mới.' : error.message === 'backend_not_configured' ? 'Trợ lý AI chưa sẵn sàng. Bạn vẫn có thể dùng thông tin Bảo, thời tiết và lịch.' : (controller?.signal.aborted||error.name==='AbortError') ? 'Đã dừng hoặc hết thời gian chờ. Chưa nhận câu trả lời hoàn chỉnh.' : 'Mất kết nối hoặc phản hồi không hợp lệ. Không có kết quả mới; hãy thử lại.';
      $('chat-retry').hidden = false;
    } finally { clearTimeout(timer); if (generation === token) { controller = null; busy(false); } }
  }
+ document.addEventListener('portfolio-local-ai',e=>{if(e.detail.state==='ready')badge.textContent='AI trên máy · Không phí API';else if(e.detail.state==='off')badge.textContent=offlineBadge;});
  launcher.hidden = false; launcher.dataset.state = 'waiting'; input.maxLength = 1500;
  launcher.addEventListener('click', () => panel.hidden ? open() : close()); $('chat-close').addEventListener('click', close);
  panel.addEventListener('keydown', e => { if (e.key === 'Escape') { e.preventDefault(); close(); } });
  $('chat-form').addEventListener('submit', e => { e.preventDefault(); ask(input.value); }); suggestions.forEach(b => b.addEventListener('click', () => ask(b.dataset.question)));
  $('chat-stop').addEventListener('click', () => controller?.abort()); $('chat-retry').addEventListener('click', () => ask(lastQuestion, true));
- $('chat-clear').addEventListener('click', () => { generation++; controller?.abort(); controller = null; busy(false); lastSent = -Infinity; history = []; messages.replaceChildren(); try { localStorage.removeItem('hb-chat-v2'); sessionStorage.removeItem('hb-chat'); } catch { /* Optional. */ } greet(); badge.textContent = offlineBadge; status.textContent = 'Đã xóa hội thoại.'; $('chat-retry').hidden = true; input.focus({ preventScroll: true }); });
+ $('chat-clear').addEventListener('click', () => { generation++; controller?.abort(); controller = null; busy(false); lastSent = -Infinity; history = []; messages.replaceChildren(); try { localStorage.removeItem('hb-chat-v2'); sessionStorage.removeItem('hb-chat'); } catch { /* Optional. */ } greet(); badge.textContent = window.PortfolioLocalAI?.ready()?'AI trên máy · Không phí API':offlineBadge; status.textContent = 'Đã xóa hội thoại.'; $('chat-retry').hidden = true; input.focus({ preventScroll: true }); });
  $('remember-chat').addEventListener('change', () => { try { localStorage.setItem('hb-chat-consent', $('remember-chat').checked ? 'on' : 'off'); if (!$('remember-chat').checked) localStorage.removeItem('hb-chat-v2'); else save(); status.textContent = $('remember-chat').checked ? 'Bạn đã chọn lưu hội thoại trên thiết bị.' : 'Không lưu hội thoại lâu dài; bản lưu cũ đã được xóa.'; } catch { status.textContent = 'Bộ nhớ không khả dụng. Hội thoại chỉ ở phiên đang mở.'; } });
  $('chat-location').addEventListener('click', () => {
    if (location) { location = null; $('chat-location').textContent = 'Dùng vị trí của tôi'; status.textContent = 'Đã bỏ vị trí đã chọn.'; return; }

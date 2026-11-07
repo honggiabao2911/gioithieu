@@ -1,0 +1,2 @@
+# Keep verified third-party bundles byte-for-byte, including upstream line endings.
+assets/vendor/** linguist-vendored -whitespace

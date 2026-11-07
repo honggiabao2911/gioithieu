@@ -15,15 +15,15 @@ Giao diện giảm chuyển động: bỏ nền hạt, halo, glitch, vệt đuô
 
 ## Cuộn tới đâu, dựng tới đó
 
-Chỉ những thành phần trong vùng nhìn thấy mới nhận con trỏ và bắt đầu dựng. Phần hoàn toàn ngoài màn hình giữ nguyên tiến độ, không tự dựng hết khi mở trang. Mỗi thành phần đã có kích thước bố cục đầy đủ; clip-path/transform tạo hiệu ứng kéo khung, đặt ảnh, viết chữ theo dòng và căn hàng. Không tự cuộn, không đổi nội dung hoặc bấm liên kết.
+Chỉ những thành phần trong vùng nhìn thấy mới nhận con trỏ và bắt đầu dựng. Ban đầu nội dung bị ẩn trong bố cục đã dành chỗ, chỉ có nền/khung mờ. Mỗi thao tác chính mặc định kéo dài khoảng 6,2 giây: tiếp cận → vẽ khung → đặt ảnh/viết từng dòng → căn chỉnh/thu dọn; các nhóm làm song song. Menu giữ nhịp chậm như nội dung chính; nhãn nhỏ có nhịp ngắn hơn. Có chọn Chậm/Rất chậm/Nhanh và nút Hiện ngay cho vùng đang xem. Phần hoàn toàn ngoài màn hình giữ nguyên tiến độ, không tự dựng hết khi mở trang. Mỗi thành phần đã có kích thước bố cục đầy đủ; clip-path/transform tạo hiệu ứng kéo khung, đặt ảnh, viết chữ theo dòng và căn hàng. Không tự cuộn, không đổi nội dung hoặc bấm liên kết.
 
-Mặc định 4 con trỏ trên PC, 2 trên mobile. Chỉ một nhãn ngắn xuất hiện trên PC khi đang dựng; hoàn tất thì đường căn/con trỏ tự ẩn. Cuộn ngược không dựng lại. Cuộn nhanh hoàn thiện các phần đã đi qua, không tích hàng đợi chạy đuổi. Khi đang nhập hoặc chọn chữ, con trỏ nhường hoàn toàn. Focus bàn phím hoặc mở link tới mục cho phép đọc/thao tác ngay.
+Mặc định 4 con trỏ trên PC, 2 trên mobile. Chỉ một nhãn ngắn xuất hiện trên PC khi đang dựng; hoàn tất thì đường căn/con trỏ tự ẩn. Cuộn ngược không dựng lại. Cuộn nhanh hoàn thiện các phần đã đi qua, không tích hàng đợi chạy đuổi. Khi đang nhập chat hoặc chọn chữ, quá trình dựng tạm dừng, không tự hoàn thiện phần đang xem; đóng chat/thoát vùng nhập sẽ tiếp tục. Chỉ focus bàn phím vào nội dung chính mới hoàn thiện phần liên quan để thao tác. Bấm menu/mở link tới mục sẽ dựng tại điểm đến, không âm thầm cho hiện hết trước khi tới.
 
 Bảng Hiệu ứng có bật/tắt, mật độ, tùy chọn đi theo chuột (mặc định tắt) và xem lại hiệu ứng ở vùng đang xem. Một vòng animation, delta time giới hạn, cache tọa độ cập nhật theo cuộn/resize/đổi bố cục; ngừng vòng lặp khi không còn việc. Tab ẩn tạm dừng; giảm chuyển động hoặc tắt JavaScript vẫn hiện nội dung đầy đủ. Các tùy chọn giao diện được lưu riêng ở `hb-display-v6` để không áp lại chế độ 12 con trỏ cũ.
 
 ## Bảo Bot và thời tiết không cần AI
 
-Bảo Bot trả lời cục bộ các câu cơ bản về Bảo, việc học, kỹ năng, dự án, liên hệ, giờ và lịch, kể cả khi không có endpoint AI. Câu “Bảo là ai?” dùng đúng dữ liệu trong portfolio. Không bịa trình độ/thành tích. Hội thoại chỉ lưu lâu dài khi khách chủ động chọn.
+Bảo Bot trả lời cục bộ các câu cơ bản về Bảo, việc học, kỹ năng, dự án, liên hệ, giờ và lịch, kể cả khi không có endpoint AI. Khi chưa bật mô hình hoặc backend, `conversation.js` cung cấp phản hồi trò chuyện cơ bản cho câu như “tôi buồn”, chào hỏi/cảm ơn và một số lượt hỏi tiếp. Luôn ghi nhãn Phản hồi cơ bản, không nhận đó là mô hình AI. Câu “Bảo là ai?” dùng đúng dữ liệu trong portfolio. Không bịa trình độ/thành tích. Hội thoại chỉ lưu lâu dài khi khách chủ động chọn.
 
 Tab **Thời tiết** và câu hỏi như “Chiều nay ở Thủ Đức có mưa không?” gọi Open-Meteo trực tiếp từ trình duyệt, không cần backend hay API key AI. Các khu vực phổ biến ở Việt Nam có tọa độ trung tâm kèm chú thích độ đại diện; địa danh khác dùng geocoding của Open-Meteo. Khách có thể nhập tên nơi hoặc chủ động bấm dùng vị trí. Không xin vị trí khi tải trang.
 
@@ -31,11 +31,23 @@ Hiển thị điều kiện hiện tại, nhiệt độ, lượng mưa, thời �
 
 Giờ dùng đồng hồ thiết bị + IANA timezone (mặc định Asia/Ho_Chi_Minh). Lịch cục bộ vẫn hỗ trợ thêm/sửa/tìm/xóa, xem trước trước khi lưu đề xuất và xuất `.ics`. Chỉ báo thành công sau khi bộ nhớ ghi được. Chưa đồng bộ Google/Microsoft và không có nhắc nền khi đóng trang.
 
-AI hỏi đáp tổng quát/tìm kiếm web/soạn lịch tự nhiên vẫn cần backend riêng. Không giấu trạng thái hoặc giả câu trả lời AI. Cấu hình endpoint công khai trong `config.js`; khóa chỉ ở backend. Xem [server/README.md](server/README.md). Backend live chưa được triển khai bằng khóa trong phiên này.
+## AI trên máy, không phí gọi API
+
+Trong chat, mở **AI trên máy · Không phí API**, đọc yêu cầu rồi bấm **Bật và tải mô hình**. Không tự tải model hoặc xin GPU khi mở trang. Cần HTTPS/localhost, WebGPU và khoảng 2 GB bộ nhớ GPU; máy yếu/điện thoại có thể không hỗ trợ. Lần đầu tải nhiều tệp mô hình lớn, nên dùng Wi-Fi. Người dùng vẫn chịu tài nguyên máy và kết nối mạng của họ; không có phí gọi API AI từ chức năng này.
+
+Dùng WebLLM 0.2.87 (Apache-2.0), Qwen2.5-1.5B-Instruct q4f16 khi có shader-f16, q4f32 nếu không. Engine chạy trong Web Worker để không chiếm vòng animation giao diện. Mô hình nhỏ không ngang các mô hình lớn, có thể trả lời sai và không tự tra web. Thời tiết/giờ/lịch tiếp tục dùng công cụ riêng. Có tiến độ tải, hủy tải, dừng trả lời và tắt model. Tắt giải phóng worker/GPU; tệp model có thể vẫn ở cache trình duyệt để tải lại nhanh hơn (có thể xóa qua dữ liệu trang trong cài đặt trình duyệt).
+
+Thư viện 6,8 MB được lưu trong `assets/vendor`, nhưng chỉ import sau khi khách chủ động bật. Đã kiểm tra SHA-512 gói NPM chính thức; giấy phép và nguồn đi kèm. Các URL tải model/runtime sử dụng cấu hình mặc định của WebLLM (Hugging Face/GitHub); không tắt xác minh thư viện. Không gửi hội thoại đến máy chủ inference trong chế độ trên máy. Lịch sử vẫn chỉ lưu lâu dài khi khách chọn.
+
+Browser kiểm thử cloud không có WebGPU adapter thực. Đã import thư viện thật và xác minh factory/model ID trong Chrome, không có tải model hoặc gọi inference tự động. Luồng bật/tải/hủy/dừng/chuyển chế độ đã kiểm bằng engine giả lập; **chưa tải trọng số hoặc xác minh câu trả lời Qwen thực** trong môi trường này. Chỉ hiển thị “AI trên máy sẵn sàng” sau khi factory WebLLM tải xong thật trên thiết bị người dùng. Máy không hỗ trợ nhận thông báo rõ và giữ chế độ cơ bản.
+
+AI backend với tìm kiếm web/soạn lịch bằng công cụ vẫn là lựa chọn riêng, chưa được triển khai và có thể có phí API. Không cần backend này để dùng AI trên máy. Không giấu trạng thái hoặc giả câu trả lời AI. Cấu hình endpoint công khai trong `config.js`; khóa chỉ ở backend. Xem [server/README.md](server/README.md). Backend live chưa được triển khai bằng khóa trong phiên này.
 
 ## Tệp chính
 
 - `index.html`, `styles.css`, `living.css`, `refine.css`: bố cục, giao diện gọn, font và hiệu ứng dựng.
+- `local-ai.js`, `local-ai-worker.mjs`, `assets/vendor/`: model tùy chọn chạy trên thiết bị, không API key.
+- `conversation.js`: phản hồi cơ bản, có giới hạn, không phải mô hình AI.
 - `app.js`, `interactions.js`: dựng theo viewport, con trỏ và đánh dấu mục điều hướng; không có startup dựng toàn trang hoặc nền hạt.
 - `weather.js`: Open-Meteo trực tiếp, địa danh/vị trí, nguồn, cache và lỗi.
 - `chat.js`, `calendar.js`, `tools.js`, `config.js`: chat, lịch, giờ/múi giờ, ICS và backend tùy chọn.
@@ -51,12 +63,14 @@ node tests/smoke.cjs
 node tests/cursors.cjs
 node tests/interactions.cjs
 node tests/weather.cjs
+node tests/local-ai.cjs
+node tests/conversation.test.cjs
 node tests/chat.cjs
 node tests/calendar.cjs
 node tests/tools.test.cjs
 node server/tests/worker.test.mjs
 ```
 
-`startup.cjs` nay kiểm tra chỉ dựng phần đang nhìn thấy, phần ngoài màn hình không tự hoàn thiện, font thực tế trong Chrome, không lặp khi cuộn ngược và không đổi chiều cao bố cục. Các bài khác kiểm tra sáu chiều rộng, deep link, nhập chữ, tắt/giảm hiệu ứng, JavaScript tắt, chat/AI lỗi/thử lại, lịch và tải ICS.
+`startup.cjs` kiểm tra ban đầu trống, nhịp dựng chậm, chat chỉ tạm dừng, Hiện ngay và chỉ dựng phần đang nhìn thấy, phần ngoài màn hình không tự hoàn thiện, font thực tế trong Chrome, không lặp khi cuộn ngược và không đổi chiều cao bố cục. Các bài khác kiểm tra sáu chiều rộng, deep link, nhập chữ, tắt/giảm hiệu ứng, JavaScript tắt, chat/AI lỗi/thử lại, lịch và tải ICS.
 
 Thời tiết được kiểm tra bằng HTTP giả lập trong browser: endpoint AI để trống, current/forecast/source, câu hỏi mưa, geocoding, chỉ dùng GPS khi bấm, API lỗi và dữ liệu cũ. Backend OpenAI cũng dùng giả lập. **Không coi các kiểm tra này là xác minh API live**: lần kiểm tra mạng trực tiếp tới Open-Meteo trong môi trường cloud bị proxy trả 403; cần môi trường có quyền truy cập hai domain trên để kiểm tra live. Việc này không thay đổi URL API trong website phục vụ người dùng.

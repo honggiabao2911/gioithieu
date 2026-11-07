@@ -1,5 +1,7 @@
 # Bảo Bot — backend AI và công cụ
 
+Đây là lựa chọn API riêng, có thể phát sinh phí theo nhà cung cấp. Không được triển khai tự động. Để dùng lựa chọn không phí API, xem AI trên máy trong README chính của frontend; chức năng đó không cần Worker hoặc khóa OpenAI.
+
 Frontend tiếp tục chạy trên GitHub Pages. Backend Cloudflare Worker chạy riêng; không có backend hoặc khóa live nào được triển khai trong bản nâng cấp này. Website hiển thị **Chưa kết nối AI** cho đến khi nhận được phản hồi hợp lệ. Giờ, lịch và thông tin portfolio vẫn dùng cục bộ. Thời tiết frontend hiện gọi Open-Meteo trực tiếp, không cần backend AI. Phần backend bên dưới chỉ cần cho AI hỏi đáp rộng, web search và công cụ trong hội thoại AI; cấu hình thiếu không chặn tab Thời tiết.
 
 ## Cấu hình bắt buộc
