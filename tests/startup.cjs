@@ -1,0 +1,26 @@
+const {chromium}=require('playwright');const assert=require('node:assert/strict');
+(async()=>{
+ const b=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox']});
+ const p=await b.newPage({viewport:{width:1440,height:1000}});const errors=[];p.on('pageerror',e=>errors.push(e.message));
+ await p.goto(process.env.BASE_URL||'http://127.0.0.1:8000/',{waitUntil:'networkidle'});
+ const height=await p.locator('main').evaluate(e=>e.offsetHeight);
+ assert.equal(await p.locator('.swarm-layer').getAttribute('data-phase'),'BUILDING');
+ const before=Number((await p.locator('#build-percent').innerText()).replace('%',''));
+ await p.mouse.move(1200,600);await p.waitForTimeout(700);
+ assert.equal(await p.locator('.living-cursor[data-state=follow]').count(),0,'following cannot start during construction');
+ assert.ok(Number((await p.locator('#build-percent').innerText()).replace('%',''))>before,'construction progresses without scrolling');
+ await p.screenshot({path:'/tmp/hgb-building.png'});
+ await p.waitForFunction(()=>document.querySelector('.swarm-layer').dataset.phase==='FOLLOWING',null,{timeout:12000});
+ assert.equal(await p.locator('.startup-item').count(),0,'all offscreen groups also complete');
+ assert.equal(await p.locator('main').evaluate(e=>e.offsetHeight),height);
+ assert.equal(await p.evaluate(()=>scrollY),0,'construction does not move the page');
+ await p.locator('#swarm-controls summary').click();await p.locator('#replay').click();
+ assert.equal(await p.locator('.swarm-layer').getAttribute('data-phase'),'BUILDING');
+ await p.locator('#build-skip').click();
+ await p.waitForFunction(()=>document.querySelector('.swarm-layer').dataset.phase==='FOLLOWING');
+ assert.equal(await p.locator('.startup-item').count(),0);
+ await p.locator('#chat-launcher').click();await p.locator('[data-question="Mấy giờ rồi?"]').click();
+ console.log(await p.locator('.chat-message').last().innerText());
+ await p.screenshot({path:'/tmp/hgb-assistant.png'});
+ assert.deepEqual(errors,[]);await b.close();console.log('PASS: automatic whole-page build, no early following, no scroll/layout jump, offscreen completion, replay and skip.');
+})().catch(e=>{console.error(e);process.exit(1)});

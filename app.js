@@ -31,6 +31,8 @@
   let width = innerWidth, height = innerHeight, agents = [], targets = [], tasks = [], waves = [];
   let raf = 0, previous = 0, clock = 0, lastInput = 0, nextTask = 1.3, count = 0, dirty = true;
   let hovered = null, guide = null, selectedText = false;
+  let phase = 'FOLLOWING', buildStart = 0, finishAt = 0, buildItems = [], buildRectsDirty = true;
+  const buildUI = document.getElementById('build-progress');
   let pointer = { x: width * .54, y: height * .42, known: false, down: false };
   const subscribers = new Set();
   const enabled = () => settings.enabled && !reduced.matches;
@@ -69,7 +71,7 @@
     ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
     agents.forEach(a => { a.x = clamp(a.x, 10, width - 30); a.y = clamp(a.y, 40, height - 90); });
     if (wasCompact !== (width < 640)) rebuildAgents();
-    dirty = true;
+    dirty = true; buildRectsDirty = true;
   }
   function cacheTargets() {
     const elements = document.querySelectorAll('.portrait,.project-art,.skill-row,.profile-note,.school-mark,.wire-space,.hero-actions,h1,h2');
@@ -161,7 +163,10 @@
         a.rest = Math.min(a.rest, clock);
         setState(a, 'depart', 'Thu dọn');
       }
-      if (a.job && !a.job.cancelled && a.job.phase !== 'done') {
+      if (phase === 'FINISHING') {
+        a.tx = width * .5 + (i - agents.length / 2) * 25; a.ty = height * .4;
+        setState(a, 'finishing', 'Website ready');
+      } else if (a.job && !a.job.cancelled && a.job.phase !== 'done') {
         const job = a.job, member = job.members.indexOf(a), q = job.phase === 'work' ? job.work / job.duration : 0;
         const point = taskPoint(job, member, q);
         a.tx = point.x; a.ty = point.y;
@@ -249,6 +254,96 @@
     waves = waves.filter(w => clock - w.start < .7);
     waves.forEach(w => { const q = (clock - w.start) / .7; ctx.beginPath(); ctx.arc(w.x, w.y, 8 + q * 55, 0, Math.PI * 2); ctx.strokeStyle = `rgba(196,244,109,${1 - q})`; ctx.stroke(); });
   }
+  function buildBox(el) {
+    let x = 0, y = 0, node = el;
+    while (node) { x += node.offsetLeft; y += node.offsetTop; node = node.offsetParent; }
+    return { x, y, w: el.offsetWidth, h: el.offsetHeight };
+  }
+  function clearBuildItem(item) {
+    item.el.classList.remove('startup-item');
+    item.el.style.removeProperty('--build-q'); item.el.style.removeProperty('clip-path');
+  }
+  function completeStartup(showReady = true) {
+    buildItems.forEach(clearBuildItem);
+    phase = showReady && enabled() ? 'FINISHING' : 'FOLLOWING';
+    finishAt = clock + .55; lastInput = clock;
+    layer.dataset.phase = phase;
+    buildUI.hidden = !showReady || !enabled();
+    document.getElementById('build-caption').textContent = 'Website ready · Tất cả các mục đã hoàn thiện';
+    document.getElementById('build-percent').textContent = '100%';
+    document.getElementById('build-meter').value = 100;
+    document.getElementById('build-skip').hidden = true;
+  }
+  function beginStartup() {
+    if (!enabled()) { completeStartup(false); return; }
+    cancelTasks(); tasks = []; buildStart = clock; phase = 'BUILDING'; layer.dataset.phase = phase;
+    const elements = [...document.querySelectorAll('.brand,.site-header nav,.build-item,.playground-grid>div')];
+    const sections = [...document.querySelectorAll('main>section')];
+    buildItems = elements.map((el, i) => {
+      const section = el.closest('main>section');
+      const group = Math.max(0, sections.indexOf(section));
+      const start = group === 0 ? Math.min(1, i * .11) : .6 + group * .3 + i % 3 * .1;
+      return { el, start, duration: group === 0 ? 2.2 : 2.1, box: buildBox(el), kind: el.dataset.kind || 'type', q: 0 };
+    });
+    buildItems.forEach(item => { item.el.classList.add('startup-item'); item.el.style.setProperty('--build-q', 0); });
+    buildRectsDirty = true; buildUI.hidden = false;
+    document.getElementById('build-caption').textContent = 'Đội đang dựng toàn bộ website';
+    document.getElementById('build-skip').hidden = false;
+  }
+  function tickStartup() {
+    if (buildRectsDirty) { buildItems.forEach(item => { item.box = buildBox(item.el); }); buildRectsDirty = false; }
+    const elapsed = clock - buildStart;
+    const active = [];
+    let total = 0;
+    buildItems.forEach(item => {
+      const q = clamp((elapsed - item.start) / item.duration, 0, 1); item.q = q; total += q;
+      const b = { ...item.box, x: item.box.x - scrollX, y: item.box.y - scrollY };
+      item.viewport = b;
+      if (q >= 1) { clearBuildItem(item); return; }
+      item.el.style.setProperty('--build-q', q);
+      if (item.kind === 'type') {
+        const line = parseFloat(getComputedStyle(item.el).lineHeight) || 24;
+        const count = Math.max(1, Math.ceil(b.h / line)), at = q * count;
+        const row = Math.min(count - 1, Math.floor(at)), x = at - row;
+        item.el.style.clipPath = `polygon(0 0,100% 0,100% ${row * 100 / count}%,${x * 100}% ${row * 100 / count}%,${x * 100}% ${(row + 1) * 100 / count}%,0 ${(row + 1) * 100 / count}%)`;
+        item.tip = { x: b.x + b.w * x, y: b.y + Math.min(b.h, (row + .5) * line) };
+      } else if (item.kind === 'frame' || item.kind === 'align') {
+        item.tip = { x: b.x + b.w * q, y: b.y + b.h * (item.kind === 'frame' ? q : .5) };
+      } else item.tip = { x: b.x + b.w * .75 + (1 - q) * 32, y: b.y + b.h * .3 - (1 - q) * 24 };
+      if (elapsed >= item.start && b.y < height - 85 && b.y + b.h > 30) active.push(item);
+    });
+    const progress = Math.round(total / Math.max(1, buildItems.length) * 100);
+    document.getElementById('build-percent').textContent = `${progress}%`;
+    document.getElementById('build-meter').value = progress;
+    if (ctx) ctx.clearRect(0, 0, width, height);
+    agents.forEach((a, i) => {
+      const item = active[i % Math.max(1, active.length)];
+      let tip, label;
+      if (item) {
+        const b = item.viewport, assist = Math.floor(i / active.length);
+        tip = assist ? { x: b.x + b.w * item.q * (assist % 2), y: b.y + b.h * item.q } : item.tip;
+        label = assist ? 'Căn chỉnh · Phối hợp' : ({ type: 'Tạo chữ', frame: 'Kéo khung', place: 'Đặt hình', align: 'Căn hàng' }[item.kind]);
+        if (ctx) {
+          ctx.strokeStyle = colors[i] + 'bb'; ctx.fillStyle = colors[i]; ctx.lineWidth = 1;
+          if (!assist) {
+            if (item.kind === 'frame') ctx.strokeRect(b.x, b.y, b.w * item.q, b.h * item.q);
+            else if (item.kind === 'place') ctx.strokeRect(b.x + (1 - item.q) * 32, b.y - (1 - item.q) * 24, b.w, b.h);
+            else { ctx.beginPath(); ctx.moveTo(b.x, tip.y); ctx.lineTo(tip.x, tip.y); ctx.stroke(); }
+          }
+          ctx.fillRect(tip.x - 3, tip.y - 3, 6, 6);
+        }
+      } else {
+        tip = { x: width * .5 + (i - agents.length / 2) * (compact() ? 22 : 38), y: height * .36 + i % 2 * 35 };
+        label = 'Dựng các mục ngoài màn hình';
+      }
+      a.x = clamp(tip.x, 8, width - 28); a.y = clamp(tip.y, 40, height - 95); a.vx = 0; a.vy = 0; a.trail = [];
+      a.el.style.transform = `translate3d(${a.x}px,${a.y}px,0)`; a.el.style.opacity = '1';
+      a.el.classList.toggle('label-left', a.x > width - 160); a.el.classList.toggle('has-label', i < (compact() ? 2 : 5));
+      setState(a, 'building', label);
+    });
+    nowState(`Đang dựng toàn trang · ${progress}%`);
+    if (buildItems.every(item => item.q >= 1) || elapsed >= 5.3) completeStartup();
+  }
   function tick(stamp) {
     raf = 0;
     if (!enabled() || document.hidden) return;
@@ -256,22 +351,35 @@
     const dt = Math.min(elapsed, .04);
     previous = stamp; clock += elapsed;
     if (dirty) cacheTargets();
-    const protect = protectedInput(), idle = clock - lastInput > 2.5;
+    layer.dataset.phase = phase;
+    if (phase === 'BUILDING') {
+      tickStartup(); subscribers.forEach(fn => fn(stamp, dt)); raf = requestAnimationFrame(safeTick); return;
+    }
+    if (phase === 'FINISHING') {
+      cancelTasks(); tasks = [];
+      agents.forEach((a, i) => { a.tx = width * .5 + (i - agents.length / 2) * 25; a.ty = height * .4; a.rest = clock + .7; });
+      if (clock >= finishAt) { phase = 'FOLLOWING'; lastInput = clock; buildUI.hidden = true; }
+    }
+    const protect = protectedInput(), idle = clock - lastInput > 3;
+    layer.dataset.phase = phase === 'FINISHING' ? 'FINISHING' : idle && settings.idle ? 'IDLE_WORKING' : 'FOLLOWING';
     layer.dataset.mode = protect ? 'yield' : idle ? 'idle' : 'follow';
     layer.dataset.clock = clock.toFixed(2);
     nowState(protect ? 'Đội đang nhường chỗ cho bạn' : idle ? (settings.idle ? 'Tự phối hợp · Không cần cuộn' : 'Nghỉ ngơi · Tự làm đã tắt') : 'Đang lắng nghe chuyển động của bạn');
     tickTasks(Math.min(elapsed, .1), idle, protect); chooseTargets(dt, idle, protect); drawTasks();
     subscribers.forEach(fn => fn(stamp, dt));
-    raf = requestAnimationFrame(tick);
+    raf = requestAnimationFrame(safeTick);
   }
-  function start() { if (!raf && enabled() && !document.hidden) { previous = 0; raf = requestAnimationFrame(tick); } }
+  function safeTick(stamp) {
+    try { tick(stamp); } catch (error) { settings.enabled = false; completeStartup(false); sync(); console.error('Motion stopped; portfolio content remains available.', error); }
+  }
+  function start() { if (!raf && enabled() && !document.hidden) { previous = 0; raf = requestAnimationFrame(safeTick); } }
   function sync() {
     cancelAnimationFrame(raf); raf = 0; previous = 0;
     const on = enabled(); layer.hidden = !on;
     document.body.classList.toggle('effects-off', !on);
     toggle.setAttribute('aria-pressed', String(on)); document.getElementById('effects-state').textContent = on ? 'Bật' : 'Tắt';
     replay.disabled = reduced.matches;
-    if (!on) { cancelTasks(); tasks = []; ctx?.clearRect(0, 0, width, height); nowState(reduced.matches ? 'Giảm chuyển động · Nội dung đầy đủ' : 'Đội con trỏ đang nghỉ'); }
+    if (!on) { completeStartup(false); cancelTasks(); tasks = []; ctx?.clearRect(0, 0, width, height); nowState(reduced.matches ? 'Giảm chuyển động · Nội dung đầy đủ' : 'Đội con trỏ đang nghỉ'); }
     start();
   }
   function interact(event) {
@@ -287,6 +395,7 @@
     guide(id) {
       const el = document.getElementById(id);
       if (!el || !['projects', 'about', 'contact', 'school'].includes(id)) return;
+      if (phase === 'BUILDING') completeStartup();
       guide = { el, until: clock + 5 }; interact(); dirty = true;
       el.scrollIntoView({ behavior: reduced.matches ? 'instant' : 'smooth', block: 'start' });
     }
@@ -305,8 +414,10 @@
   document.getElementById('idle-work').addEventListener('change', e => { settings.idle = e.target.checked; save(); interact(); });
   replay.addEventListener('click', () => {
     if (reduced.matches) return;
-    settings.enabled = true; pointer = { ...pointer, x: width * .5, y: height * .4, known: true }; interact(); save(); sync();
+    settings.enabled = true; beginStartup(); pointer = { ...pointer, x: width * .5, y: height * .4, known: true }; interact(); save(); sync();
   });
+  document.getElementById('build-skip').addEventListener('click', () => completeStartup());
+  document.addEventListener('focusin', e => { if (phase === 'BUILDING' && !e.target.closest('#build-progress,#swarm-controls')) completeStartup(); });
   window.addEventListener('pointermove', interact, { passive: true });
   window.addEventListener('pointerdown', e => { pointer.down = true; interact(e); }, { passive: true });
   window.addEventListener('pointerup', () => { pointer.down = false; });
@@ -322,5 +433,5 @@
   document.addEventListener('click', e => { if (enabled() && e.detail) { waves.push({ x: e.clientX, y: e.clientY, start: clock }); if (waves.length > 5) waves.shift(); } });
   reduced.addEventListener('change', sync);
   if ('ResizeObserver' in window) new ResizeObserver(() => { dirty = true; }).observe(document.querySelector('main'));
-  resize(); rebuildAgents(); sync();
+  resize(); rebuildAgents(); beginStartup(); sync();
 })();
