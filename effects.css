@@ -1,0 +1,70 @@
+/* Ambient and interaction layers. Construction remains controlled by scroll. */
+body { isolation: isolate; }
+.ambient-background { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.ambient-background canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.aurora { position: absolute; width: 65vw; height: 65vw; min-width: 350px; min-height: 350px; border-radius: 50%; filter: blur(75px); opacity: .09; will-change: transform; }
+.aurora-one { background: radial-gradient(ellipse, #93c647, transparent 65%); top: -35vw; left: -10vw; animation: aurora-drift 24s ease-in-out infinite alternate; }
+.aurora-two { background: radial-gradient(ellipse, #4d8f7d, transparent 65%); bottom: -40vw; right: -15vw; animation: aurora-drift 30s ease-in-out infinite alternate-reverse; }
+.ambient-grid { position: absolute; inset: 0; background-image: linear-gradient(#c4f46d09 1px, transparent 1px), linear-gradient(90deg, #c4f46d09 1px, transparent 1px); background-size: 90px 90px; mask-image: radial-gradient(ellipse at 50% 0, #000, transparent 75%); }
+.pointer-halo { position: fixed; z-index: -1; width: 360px; height: 360px; top: 0; left: 0; pointer-events: none; border-radius: 50%; background: radial-gradient(circle, #c4f46d0b, transparent 70%); opacity: 0; transition: opacity .4s; will-change: transform; }
+.pointer-halo.is-visible { opacity: 1; }
+@keyframes aurora-drift { to { transform: translate3d(12vw, 10vh, 0) scale(1.15); } }
+.site-header nav a { position: relative; padding: 5px 0; }
+.site-header nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: -3px; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .3s; }
+.site-header nav a:hover::after, .site-header nav a[aria-current]::after { transform: scaleX(1); }
+.site-header nav a[aria-current] { color: var(--accent); }
+.status-dot, .header-status i { animation: status-breathe 3.5s ease-in-out infinite; }
+@keyframes status-breathe { 50% { box-shadow: 0 0 14px #c4f46d88; } }
+h1::after { content: attr(data-text); position: absolute; inset: 0; pointer-events: none; color: #b2edff; opacity: 0; }
+h1.glitch-once::after { animation: title-glitch .48s steps(2, end); }
+@keyframes title-glitch { 15% { opacity: .7; clip-path: inset(20% 0 60%); transform: translateX(-3px); } 45% { opacity: .65; clip-path: inset(60% 0 22%); transform: translateX(4px); } 75% { opacity: .4; clip-path: inset(43% 0 40%); transform: translateX(-2px); } }
+.portrait-image::before { content: ''; position: absolute; top: -10%; left: 0; width: 100%; height: 2px; background: #c4f46daa; box-shadow: 0 0 18px #c4f46d88; opacity: 0; z-index: 3; pointer-events: none; }
+.portrait:hover .portrait-image::before { animation: portrait-scan 1.8s ease-in-out; }
+@keyframes portrait-scan { 10% { opacity: .8; } 90% { opacity: .8; } to { top: 110%; opacity: 0; } }
+.portrait-sticker { transition: rotate .45s; }
+.portrait:hover .portrait-sticker { rotate: 12deg; }
+.hero-bottom > a { transition: color .2s; }
+.hero-bottom > a:hover { color: var(--accent); }
+.interest-strip b { animation: interest-spin 24s linear infinite; }
+@keyframes interest-spin { to { rotate: 360deg; } }
+.skill-row { transition: border-color .3s, background .3s; }
+.skill-row:hover { border-color: #c4f46d88; background: linear-gradient(90deg, #c4f46d08, transparent); }
+.skill-symbol { transition: transform .4s, text-shadow .3s; }
+.skill-row:hover .skill-symbol { transform: rotate(-8deg) scale(1.15); text-shadow: 0 0 20px #c4f46d55; }
+.skill-number { transition: color .3s; }
+.skill-row:hover .skill-number { color: var(--accent); }
+.project-card { perspective: 1000px; }
+.project-art { transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)); transition: transform .3s ease-out, box-shadow .3s; }
+.project-art::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(circle at var(--shine-x, 50%) var(--shine-y, 50%), #ffffff1b, transparent 55%); transition: opacity .3s; }
+.project-card:hover .project-art::after { opacity: 1; }
+.project-card:hover .project-art { box-shadow: 0 15px 35px #0004; }
+.project-info h3 { transition: color .25s; }
+.project-card:hover h3 { color: var(--accent); }
+.project-arrow { transition: transform .3s; }
+.project-card:hover .project-arrow { transform: translate(4px, -4px); }
+.project-art .project-open .arrow-icon { position: static; width: 18px; height: 18px; }
+.magnetic { transform: translate3d(var(--magnet-x, 0px), var(--magnet-y, 0px), 0); transition: transform .2s, box-shadow .3s, background .3s; position: relative; overflow: hidden; }
+.magnetic::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(110deg, transparent 35%, #ffffff66 50%, transparent 65%); transform: translateX(-130%); }
+.magnetic:hover { transform: translate3d(var(--magnet-x, 0px), calc(var(--magnet-y, 0px) - 2px), 0); box-shadow: 0 8px 30px #c4f46d20; }
+.magnetic:hover::after { animation: button-shine .8s ease; }
+@keyframes button-shine { to { transform: translateX(130%); } }
+.social-links > a { position: relative; transition: border-color .3s; }
+.social-links > a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .4s; }
+.social-links > a:hover::after { transform: scaleX(1); }
+.social-links > a > span:first-child { transition: transform .3s; }
+.social-links > a:hover > span:first-child { transform: translateX(5px); }
+.interaction-spark { position: fixed; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); pointer-events: none; z-index: 30; }
+.effects-off .ambient-background, .effects-off .pointer-halo, .effects-off .interaction-spark { display: none; }
+.effects-off .interest-strip b, .effects-off .status-dot, .effects-off .header-status i, .effects-off .portrait-image::before, .effects-off .magnetic::after, .effects-off h1::after { animation: none; }
+.effects-off .project-art, .effects-off .magnetic, .effects-off .skill-symbol, .effects-off .social-links > a > span:first-child { transform: none; }
+.effects-off .portrait-sticker { rotate: 0deg; }
+@media (hover: none) { .pointer-halo { display: none; } .project-art { transform: none; } }
+@media (max-width: 640px) { .aurora { filter: blur(45px); opacity: .07; } .ambient-grid { background-size: 65px 65px; } }
+@media (prefers-reduced-motion: reduce) {
+  .ambient-background, .pointer-halo, .interaction-spark { display: none; }
+  .project-art, .magnetic, .skill-symbol, .social-links > a > span:first-child { transform: none; }
+}
+.effects-off *, .effects-off *::before, .effects-off *::after {
+  animation: none !important;
+  transition: none !important;
+}

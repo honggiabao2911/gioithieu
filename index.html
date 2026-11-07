@@ -1,591 +1,86 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Hồng Gia Bảo | Portfolio</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
-  
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
-
-  <style>
-    /* =========================================
-       1. CSS HACKER INTRO (MATRIX OVERLOAD)
-       ========================================= */
-    #terminal-screen {
-      position: fixed; inset: 0; z-index: 9999;
-      background-color: #050505;
-      color: #0f0;
-      font-family: 'Fira Code', monospace; /* Font cũ bạn thích */
-      font-size: 13px;
-      padding: 20px;
-      overflow-y: auto;
-      display: flex; flex-direction: column; justify-content: flex-start;
-    }
-
-    /* Scanlines cũ */
-    #terminal-screen::after {
-      content: ""; position: absolute; inset: 0;
-      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px);
-      pointer-events: none; z-index: 10;
-    }
-
-    .log-line { display: block; margin-bottom: 2px; word-wrap: break-word; line-height: 1.3; }
-    
-    /* Màu sắc */
-    .text-system { color: #00f3ff; font-weight: bold; }
-    .text-warning { color: #ffcc00; }
-    .text-danger { color: #ff003c; text-shadow: 0 0 5px #ff003c; }
-    .text-matrix { color: rgba(0, 255, 0, 0.6); font-size: 11px; } /* Code chạy nhanh */
-    
-    /* Dòng cảnh báo Tiếng Anh nền đỏ */
-    .simulation-alert {
-        background: #b91c1c; color: #fff; padding: 4px 8px;
-        font-weight: bold; display: inline-block; margin-bottom: 20px;
-        font-size: 14px; border: 1px solid #ff5555;
-    }
-
-    /* Thanh Loading Kiểu Cũ (Đơn giản) */
-    .progress-wrapper { margin: 15px 0; display: none; }
-    .progress-track { width: 100%; max-width: 400px; height: 12px; border: 1px solid #0f0; padding: 1px; }
-    .progress-bar { width: 0%; height: 100%; background: #0f0; box-shadow: 0 0 10px #0f0; transition: width 0.1s linear; }
-
-    /* Hộp giải mã Password */
-    #password-box { 
-      margin-top: 20px; border: 1px solid #0f0; padding: 15px; 
-      max-width: 450px; display: none; background: rgba(0,20,0,0.8); 
-    }
-    #decoding-text { font-size: 22px; font-weight: bold; letter-spacing: 2px; color: #fff; }
-
-    /* Hiệu ứng nhiễu Glitch */
-    .glitch-out { animation: glitchAnim 0.5s forwards; }
-    @keyframes glitchAnim {
-      0% { opacity: 1; }
-      20% { opacity: 0.8; transform: skewX(-20deg); filter: invert(1); }
-      40% { opacity: 1; transform: skewX(20deg); }
-      60% { opacity: 0; transform: skewX(0deg); }
-      100% { opacity: 0; display: none;}
-    }
-
-    /* Ẩn trang chính */
-    #main-content { display: none; opacity: 0; transition: opacity 1.5s ease; }
-    #main-content.visible { opacity: 1; }
-
-
-    /* =========================================
-       2. CSS GIAO DIỆN CHÍNH (GIỮ NGUYÊN)
-       ========================================= */
-    :root{
-      --bg-dark: #f0f9ff; --text-main: #0f172a; --text-muted: #475569;
-      --card-bg: rgba(255, 255, 255, 0.85); --card-border: rgba(14, 165, 233, 0.25);
-      --accent: #0284c7; --neon: #0ea5e9; --purple: #7c3aed;
-      --shadow: 0 15px 40px rgba(14, 165, 233, 0.15); --radius: 24px;
-      --matrix-bg: rgba(240, 249, 255, 0.3); --matrix-color: #bae6fd; --bobDur: 2s; 
-    }
-    body.dark-mode {
-      --bg-dark: #050a10; --text-main: #e0f2fe; --text-muted: #94a3b8; 
-      --card-bg: rgba(18, 30, 48, 0.60); --card-border: rgba(56, 189, 248, 0.15);
-      --accent: #38bdf8; --neon: #00f2ea; --purple: #a855f7; 
-      --shadow: 0 20px 50px rgba(0, 0, 0, 0.5); --matrix-bg: rgba(5, 10, 16, 0.1); --matrix-color: #0ea5e9;
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{
-      font-family: system-ui, -apple-system, sans-serif; color: var(--text-main);
-      background-color: var(--bg-dark);
-      background-image: radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.08), transparent 25%), radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.06), transparent 25%);
-      overflow-x:hidden; transition: background-color 0.4s ease, color 0.4s ease;
-    }
-    #codeBg{ position:fixed; inset:0; z-index:-3; opacity:0.5; mix-blend-mode: multiply; pointer-events:none; transition: 0.3s; }
-    body.dark-mode #codeBg { opacity: 0.25; mix-blend-mode: screen; }
-    .grid-overlay{
-      position:fixed; inset:0; z-index:-2; pointer-events:none;
-      background-image: linear-gradient(to right, rgba(56, 189, 248, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
-      background-size: 50px 50px; mask-image: radial-gradient(circle at center, black, transparent 80%);
-    }
-    header{ position:sticky; top:0; z-index:50; backdrop-filter: blur(16px); background: rgba(240, 249, 255, 0.8); border-bottom: 1px solid var(--card-border); transition: background 0.4s ease; }
-    body.dark-mode header { background: rgba(5, 10, 16, 0.7); }
-    .nav{ max-width: 1000px; margin:0 auto; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; }
-    .brand{ display:flex; align-items:center; gap:10px; font-weight:800; color: var(--text-main); }
-    .brand .mark{ width:36px; height:36px; border-radius:10px; background: linear-gradient(135deg, rgba(56,189,248,0.2), rgba(0,242,234,0.2)); border: 1px solid var(--accent); display:grid; place-items:center; color: var(--neon); box-shadow: 0 0 15px rgba(0,242,234,0.3); }
-    nav ul{list-style:none; display:flex; gap:6px; align-items:center;}
-    nav a{ text-decoration:none; color: var(--text-muted); font-weight:600; font-size:14px; padding:8px 14px; border-radius:12px; transition:0.3s; }
-    nav a:hover, nav a.active{ color: var(--neon); background: rgba(56,189,248,0.1); }
-    .theme-btn { background: transparent; border: 1px solid var(--card-border); color: var(--text-main); height: 40px; padding: 0 15px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; margin-left: 10px; }
-    .theme-btn:hover { background: rgba(56, 189, 248, 0.1); border-color: var(--accent); }
-    .theme-text { font-size: 13px; font-weight: 700; white-space: nowrap; }
-    main{max-width:900px; margin:0 auto; padding:20px 16px 80px;}
-    .hero{ min-height: calc(100vh - 80px); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; position:relative; gap:10px; }
-    .avatarWrap{ position:relative; width:300px; height:340px; display:grid; place-items:center; animation: heroEnter 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-    @keyframes heroEnter{ from{opacity:0; transform:translateY(30px)} to{opacity:1; transform:translateY(0)} }
-    .bob{ position:absolute; inset:0; display:grid; place-items:center; animation: bob var(--bobDur) cubic-bezier(0.45, 0, 0.55, 1) infinite; }
-    @keyframes bob{ 0%, 100%{transform: translateY(0)} 50%{transform: translateY(-15px)} }
-    .water{ position:absolute; bottom:30px; left:50%; transform:translateX(-50%); width:300px; height:100px; pointer-events:none; }
-    .surface{ position:absolute; inset:0; border-radius:50%; background: radial-gradient(closest-side, rgba(2, 132, 199, 0.15), transparent 80%); border: 1px solid rgba(2, 132, 199, 0.1); box-shadow: 0 0 25px rgba(2, 132, 199, 0.2); animation: surfaceBeat var(--bobDur) ease-in-out infinite; }
-    body.dark-mode .surface { background: radial-gradient(closest-side, rgba(0, 242, 234, 0.15), transparent 80%); border-color: rgba(0, 242, 234, 0.1); }
-    @keyframes surfaceBeat { 0%, 100% {transform: scale(1); opacity:0.8;} 50% {transform: scale(0.9); opacity:0.5;} }
-    .ripple{ position:absolute; left:50%; top:50%; width:100%; height:100%; transform:translate(-50%,-50%) scale(0.2); border-radius:50%; border: 1px solid rgba(2, 132, 199, 0.5); opacity:0; pointer-events:none; }
-    body.dark-mode .ripple { border-color: rgba(255, 255, 255, 0.6); box-shadow: 0 0 8px var(--neon); }
-    .r1{animation: rippleOut var(--bobDur) linear infinite; animation-delay: 1.0s;}
-    .r2{animation: rippleOut var(--bobDur) linear infinite; animation-delay: 1.2s;}
-    @keyframes rippleOut{ 0%{opacity:0; transform:translate(-50%,-50%) scale(0.2); border-width:2px;} 10%{opacity:1;} 100%{opacity:0; transform:translate(-50%,-50%) scale(1.5); border-width:0px;} }
-    .avatar{ width:240px; height:240px; border-radius:30px; border: 1px solid rgba(0,0,0,0.05); background: #000; overflow:hidden; position:relative; z-index:5; box-shadow: 0 20px 50px rgba(2, 132, 199, 0.25); transition: box-shadow 0.4s; }
-    body.dark-mode .avatar { box-shadow: 0 0 40px rgba(0, 242, 234, 0.15); border-color: rgba(255,255,255,0.1); }
-    .avatar img{width:100%; height:100%; object-fit:cover; display:block;}
-    .scan-line{ position:absolute; left:-20%; right:-20%; height:3px; background: #fff; box-shadow: 0 0 4px #fff, 0 0 15px var(--accent), 0 0 30px var(--neon); opacity:0; top:-10%; transform: rotate(-5deg); animation: scanDown 2.5s ease-out forwards; z-index: 10; pointer-events: none; }
-    @keyframes scanDown{ 0% { top:-10%; opacity:0; } 10% { opacity:1; } 100% { top:120%; opacity:0; } }
-    .name{ font-size: clamp(38px, 7vw, 58px); font-weight:900; background: linear-gradient(to right, #0f172a, #0284c7); -webkit-background-clip: text; background-clip:text; color:transparent; margin-bottom: 5px; animation: fadeIn 1s ease-out 0.5s forwards; opacity:0; }
-    body.dark-mode .name { background: linear-gradient(to right, #fff, var(--neon)); -webkit-background-clip: text; color: transparent; }
-    .subtitle-box{ font-size: 16px; color: var(--accent); font-family: 'Courier New', monospace; min-height: 24px; display:flex; align-items:center; justify-content:center; gap:2px; animation: fadeIn 1s ease-out 0.8s forwards; opacity:0; }
-    .cursor{width:8px; height:18px; background:var(--neon); animation: blink 1s infinite;}
-    @keyframes blink{0%,100%{opacity:1} 50%{opacity:0}}
-    @keyframes fadeIn{to{opacity:1}}
-    .chips{ display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:20px; animation: fadeIn 1s ease-out 1.2s forwards; opacity:0; }
-    .cyber-chip { border: 1px solid rgba(2, 132, 199, 0.3); background: #fff; padding: 10px 18px; border-radius: 30px; display: flex; align-items: center; gap: 8px; color: var(--text-main); font-weight: 600; font-size: 14px; transition: 0.3s; }
-    .cyber-chip svg { width: 20px; height: 20px; color: var(--accent); transition: 0.3s; }
-    body.dark-mode .cyber-chip { border-color: var(--accent); background: rgba(56, 189, 248, 0.05); color: var(--text-main); }
-    body.dark-mode .cyber-chip svg { color: var(--neon); }
-    .cyber-chip:hover { background: rgba(56, 189, 248, 0.15); box-shadow: 0 0 20px rgba(0, 242, 234, 0.3), 0 0 5px var(--neon) inset; border-color: var(--neon); transform: translateY(-3px); }
-    .section{margin-top:24px;}
-    .card{ background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); backdrop-filter: blur(12px); transition: all 0.4s ease; position: relative; overflow: hidden; }
-    .card:hover{ border-color: var(--neon); box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 20px rgba(56, 189, 248, 0.15); transform: translateY(-5px); }
-    .head { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding-bottom: 15px; border-bottom: 1px solid var(--card-border); }
-    .icon-box { width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(0,242,234,0.05)); border: 1px solid rgba(56, 189, 248, 0.3); display: grid; place-items: center; box-shadow: 0 0 15px rgba(56, 189, 248, 0.1); transition: 0.3s; }
-    .card:hover .icon-box { background: linear-gradient(135deg, rgba(56,189,248,0.25), rgba(0,242,234,0.15)); box-shadow: 0 0 20px rgba(0, 242, 234, 0.4); border-color: var(--neon); transform: scale(1.05) rotate(3deg); }
-    .head-icon { width: 26px; height: 26px; color: var(--accent); filter: none; }
-    body.dark-mode .head-icon { color: var(--neon); filter: drop-shadow(0 0 2px var(--neon)); }
-    .head h2 { font-size: 22px; text-transform: uppercase; letter-spacing: 0.5px; background: linear-gradient(90deg, #0f172a, #0284c7); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 800; margin: 0; }
-    body.dark-mode .head h2 { background: linear-gradient(90deg, var(--text-main), var(--accent)); -webkit-background-clip: text; color: transparent; }
-    .card p{color: var(--text-muted); line-height:1.7; font-size:15px;}
-    .card b { color: var(--text-main); font-weight: 700;}
-    .skill-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
-    .skill-list li { display: flex; align-items: flex-start; gap: 14px; color: var(--text-muted); font-size: 15px; line-height: 1.5; }
-    .skill-icon { width: 22px; height: 22px; color: var(--accent); flex-shrink: 0; margin-top: 2px; background: rgba(56, 189, 248, 0.1); border-radius: 6px; padding: 3px; }
-    .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px;}
-    @media(max-width:600px){.grid-2{grid-template-columns:1fr}}
-    .project-item{ display:flex; align-items: flex-start; gap: 15px; text-decoration:none; background: linear-gradient(145deg, #fff, #f0f9ff); border: 1px solid rgba(0,0,0,0.08); border-radius: 18px; padding:18px; transition:0.3s; }
-    body.dark-mode .project-item { background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(0,0,0,0.2)); border-color: rgba(56, 189, 248, 0.1); }
-    .project-icon { width: 44px; height: 44px; background: rgba(56,189,248,0.1); border-radius: 12px; display: grid; place-items: center; color: var(--neon); flex-shrink: 0; border: 1px solid rgba(56, 189, 248, 0.2); }
-    .project-item:hover{ background: linear-gradient(145deg, rgba(56,189,248,0.15), rgba(0,242,234,0.05)); border-color: var(--neon); transform: translateY(-4px) scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-    .tag{ display:inline-block; font-size:11px; font-weight:bold; padding:4px 10px; background: linear-gradient(90deg, var(--accent), var(--neon)); color: #fff; border-radius:20px; margin-bottom:6px; }
-    body.dark-mode .tag { color: #050a10; }
-    .project-item h3{font-size:17px; color: var(--text-main); margin-bottom:4px; font-weight: 700;}
-    .project-item span{font-size:14px; color: var(--text-muted);}
-    .btn-group{display:flex; flex-wrap:wrap; gap:12px; margin-top:20px;}
-    .btn{ display:inline-flex; align-items:center; gap:10px; padding:12px 20px; border-radius:14px; text-decoration:none; font-weight:700; font-size:15px; transition:0.3s; }
-    .btn-primary{ background: linear-gradient(135deg, var(--accent), var(--neon)); color: #fff; box-shadow: 0 4px 15px rgba(56,189,248,0.4); }
-    body.dark-mode .btn-primary { color: #050a10; }
-    .btn-primary:hover{transform:translateY(-2px); box-shadow: 0 6px 20px rgba(0,242,234,0.5);}
-    .btn-outline{ background: rgba(0,0,0,0.02); color: var(--text-main); border: 1px solid rgba(0,0,0,0.1); }
-    body.dark-mode .btn-outline { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
-    .btn-outline:hover{background: rgba(255,255,255,0.1); border-color: var(--text-main);}
-    #school .card { border-color: var(--purple); background: linear-gradient(180deg, var(--card-bg), rgba(168, 85, 247, 0.05)); }
-    #school .icon-box { background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.1)); border-color: rgba(168, 85, 247, 0.4); }
-    #school .head-icon { color: #d8b4fe; }
-    #school .head h2 { background: linear-gradient(90deg, #d8b4fe, #f472b6); -webkit-background-clip: text; color: transparent; }
-    footer{ text-align:center; padding-top:40px; color: var(--text-muted); font-size:14px; border-top: 1px solid rgba(255,255,255,0.05); margin-top:50px; }
-    svg{width:24px; height:24px;}
-    .hidden-mobile{display:block;}
-    @media(max-width:768px){.nav ul{display:none;} .hidden-mobile{display:none;}}
-    main { perspective: 1000px; overflow-x: hidden; }
-    .scroll-item { opacity: 0; transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); will-change: transform, opacity; }
-    .scroll-item:nth-child(odd) { transform: translateX(-100px) rotateY(-20deg) scale(0.8); }
-    .scroll-item:nth-child(even) { transform: translateX(100px) rotateY(20deg) scale(0.8); }
-    .scroll-item.show { opacity: 1; transform: translateX(0) rotateY(0) scale(1); }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101310">
+  <meta name="description" content="Portfolio Hồng Gia Bảo — sinh viên An ninh mạng tại iSPACE, yêu công nghệ, quay chụp và những trải nghiệm web sáng tạo.">
+  <title>Hồng Gia Bảo — Luôn tò mò, luôn khám phá.</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23c4f46d'/%3E%3Ctext x='8' y='43' font-family='sans-serif' font-weight='bold' font-size='31'%3EHB%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="effects.css?v=3">
+  <script src="app.js?v=3" defer></script>
+  <script src="interactions.js?v=3" defer></script>
 </head>
-
 <body>
-  <div id="terminal-screen">
-    <div class="simulation-alert">
-      ⚠️ SIMULATION MODE ACTIVE. VISUAL EFFECTS ONLY.
-    </div>
-    
-    <div id="console-output"></div>
-    
-    <div class="progress-wrapper" id="progress-wrapper">
-      <div class="progress-track">
-        <div class="progress-bar" id="hack-bar"></div>
+  <a class="skip-link" href="#main">Đến nội dung chính</a>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Hồng Gia Bảo — Trang đầu">HB<span class="brand-dot">.</span><span class="brand-caption">HỒNG GIA BẢO<br>PERSONAL PORTFOLIO</span></a>
+    <nav aria-label="Điều hướng chính">
+      <a href="#about">Giới thiệu</a><a href="#skills">Kỹ năng</a><a href="#projects">Dự án <span>04</span></a><a href="#contact">Liên hệ <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a>
+    </nav>
+    <span class="header-status"><i></i> LUÔN ĐANG HỌC HỎI</span>
+  </header>
+  <main id="main">
+    <section class="hero scene" id="home" aria-labelledby="hero-title">
+      <div class="section-meta"><span><i class="status-dot"></i> XIN CHÀO, MÌNH LÀ BẢO</span><span>PORTFOLIO / VOL. 01</span></div>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow build-item" data-kind="type">CÔNG NGHỆ × SÁNG TẠO × NHỮNG ĐIỀU MỚI</div>
+          <h1 id="hero-title" class="build-item" data-kind="type">Hồng Gia Bảo<span class="accent">.</span></h1>
+          <p class="hero-statement build-item" data-kind="type">Luôn tò mò.<br>Không ngừng <em>khám phá.</em></p>
+          <p class="hero-description build-item" data-kind="type">Sinh viên An ninh mạng tại iSPACE.<br>Mình học cách công nghệ vận hành — và dùng sự sáng tạo để kể những câu chuyện của riêng mình.</p>
+          <div class="hero-actions build-item" data-kind="frame"><a class="button primary" href="#projects">Khám phá dự án <span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a><a class="text-link" href="#contact">Kết nối với mình <span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a></div>
+        </div>
+        <figure class="portrait build-item" data-kind="place">
+          <div class="portrait-top"><span>01 / THE HUMAN BEHIND</span><span class="tiny-cross">+</span></div>
+          <div class="portrait-image"><div class="avatar-fallback" aria-hidden="true">HB.</div><img src="avatar.jpg" width="640" height="640" alt="Ảnh đại diện Hồng Gia Bảo" fetchpriority="high"><span class="photo-corner corner-a"></span><span class="photo-corner corner-b"></span><span class="image-tag">STAY CURIOUS_</span></div>
+          <figcaption><span>HỒNG GIA BẢO</span><span><i class="status-dot"></i> ĐANG KHÁM PHÁ</span></figcaption>
+          <span class="portrait-sticker" aria-hidden="true">&lt;/&gt;</span>
+        </figure>
       </div>
-    </div>
-
-    <div id="password-box">
-      <span style="display:block; margin-bottom:5px; font-size:12px; color:#0f0">DECRYPTING ROOT KEY:</span>
-      <div id="decoding-text"></div>
-    </div>
-  </div>
-
-  <div id="main-content">
-    <canvas id="codeBg"></canvas>
-    <div class="grid-overlay"></div>
-
-    <header>
-      <div class="nav">
-        <div class="brand">
-          <div class="mark">HB</div>
-          <span>Hồng Gia Bảo</span>
+      <div class="hero-bottom"><a href="#about">↓ CUỘN ĐỂ KHÁM PHÁ</a><span class="build-hint">6 con trỏ cùng dựng · Cuộn chậm để xem <span>↙</span></span></div>
+    </section>
+    <div class="interest-strip" aria-label="Những điều mình quan tâm"><span>AN NINH MẠNG</span><b>✳</b><span>CÔNG NGHỆ</span><b>✳</b><span>QUAY & CHỤP</span><b>✳</b><span>SÁNG TẠO</span><b>✳</b><span>KHÔNG NGỪNG HỌC</span></div>
+    <section class="about scene section" id="about" aria-labelledby="about-title">
+      <div class="section-label"><span>01 / GIỚI THIỆU</span><span>MỘT CHÚT VỀ MÌNH</span></div>
+      <div class="about-grid">
+        <h2 id="about-title" class="build-item" data-kind="type">Bắt đầu từ<br>một câu hỏi:<br><em>“Tại sao?”</em></h2>
+        <div class="about-text build-item" data-kind="type"><p>Mình thích đồ công nghệ. Nhưng hơn cả việc sử dụng, mình muốn hiểu <strong>bên trong chúng có gì và chúng hoạt động ra sao.</strong></p><p>Mình là <strong>Hồng Gia Bảo</strong>, tân sinh viên ngành An ninh mạng tại iSPACE, đồng thời là cộng tác viên tuyển sinh cho trường. Ngoài giờ học, mình thích quay chụp, chỉnh sửa video và lưu lại những khoảnh khắc trên hành trình của mình.</p><p class="muted">Chưa biết tất cả. Nhưng luôn muốn học thêm một điều mới mỗi ngày.</p></div>
+        <div class="profile-note build-item" data-kind="frame"><span class="mono muted">&gt; whoami</span><span>Người học công nghệ.<br>Người thích sáng tạo.</span><span class="note-flower" aria-hidden="true">✳</span></div>
+      </div>
+    </section>
+    <section class="skills scene section" id="skills" aria-labelledby="skills-title">
+      <div class="section-label"><span>02 / HÀNH TRANG</span><span>ĐANG HỌC. ĐANG LÀM.</span></div>
+      <div class="section-heading"><h2 id="skills-title" class="build-item" data-kind="type">Mỗi ngày,<br>thêm một <em>kỹ năng.</em></h2><p class="muted build-item" data-kind="type">Không có thanh phần trăm hoàn hảo.<br>Chỉ có sự tiến bộ từng chút một.</p></div>
+      <div class="skill-columns">
+        <div><h3 class="skill-group">&lt;/&gt; CÔNG NGHỆ</h3>
+          <div class="skill-row build-item" data-kind="align"><span class="skill-number">01</span><div><h4>Tin học & phần cứng</h4><p>Biết sử dụng máy tính, đang tìm hiểu về phần cứng.</p></div><span class="skill-symbol">⌘</span></div>
+          <div class="skill-row build-item" data-kind="align"><span class="skill-number">02</span><div><h4>An ninh mạng</h4><p>Đang học các kiến thức nhập môn tại iSPACE.</p></div><span class="skill-symbol">⛨</span></div>
+          <div class="skill-row build-item" data-kind="align"><span class="skill-number">03</span><div><h4>Python</h4><p>Đang tìm hiểu, thực hành và học hỏi thêm.</p></div><span class="skill-symbol">{ }</span></div>
         </div>
-        <div style="display:flex; align-items:center">
-          <nav>
-            <ul>
-              <li><a href="#home">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#projects">Projects</a></li>
-              <li><a href="#contact">Contact</a></li>
-              <li><a href="#school">School</a></li>
-            </ul>
-          </nav>
-          <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
-              <span class="theme-text">Đổi chế độ</span>
-              <svg id="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-              <svg id="sun-icon" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-          </button>
+        <div><h3 class="skill-group">✳ SÁNG TẠO & KẾT NỐI</h3>
+          <div class="skill-row build-item" data-kind="align"><span class="skill-number">04</span><div><h4>Chỉnh sửa video</h4><p>Dựng video TikTok, bắt trend cùng CapCut.</p></div><span class="skill-symbol">▷</span></div>
+          <div class="skill-row build-item" data-kind="align"><span class="skill-number">05</span><div><h4>Quay chụp & sáng tạo</h4><p>Ghi lại khoảnh khắc, kể chuyện bằng hình ảnh.</p></div><span class="skill-symbol">◎</span></div>
+          <div class="skill-row build-item" data-kind="align"><span class="skill-number">06</span><div><h4>Giao tiếp & làm việc nhóm</h4><p>Tư vấn tuyển sinh, lắng nghe và cùng hợp tác.</p></div><span class="skill-symbol"><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></div>
         </div>
       </div>
-    </header>
-
-    <main>
-      <section class="hero" id="home">
-        <div class="avatarWrap">
-          <div class="bob">
-            <div class="water">
-              <div class="surface"></div>
-              <div class="ripple r1"></div>
-              <div class="ripple r2"></div>
-            </div>
-            <div class="avatar">
-              <img src="avatar.jpg" alt="Hồng Gia Bảo" onerror="this.src='https://api.dicebear.com/9.x/avataaars/svg?seed=BaoCyber'">
-              <div class="scan-line"></div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="name">Hồng Gia Bảo</div>
-          <div class="subtitle-box">
-            <span>> </span>
-            <span id="type-text"></span>
-            <span class="cursor"></span>
-          </div>
-          <div class="chips">
-            <a href="#projects" class="chip cyber-chip" style="text-decoration: none; cursor: pointer;">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-              </svg>
-              <span>My Projects</span>
-            </a>
-            <a href="#contact" class="chip cyber-chip" style="text-decoration: none; cursor: pointer;">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <span>Contact Me</span>
-            </a>
-          </div>
-        </div>
-      </section>
-      
-      <section class="section" id="about">
-        <div class="card">
-          <div class="head">
-            <div class="icon-box"><svg class="head-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></div>
-            <h2>Giới thiệu</h2>
-          </div>
-          <p>Mình là <b>Hồng Gia Bảo</b>. Mình thích <b>đồ công nghệ</b>, thích tìm hiểu cấu tạo – cách hoạt động của <b>đồ công nghệ</b>, và mình cũng thích quay/chụp để lưu lại khoảnh khắc và hành trình. Hiện tại mình đang là <b>Tân sinh viên</b> ngành An ninh mạng tại iSPACE và làm cộng tác viên tuyển sinh cho trường.</p>
-        </div>
-      </section>
-
-      <section class="section" id="skills">
-        <div class="grid-2">
-          <div class="card">
-            <div class="head">
-              <div class="icon-box"><svg class="head-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"></path></svg></div>
-              <h2>Kỹ năng cứng</h2>
-            </div>
-            <ul class="skill-list">
-              <li><svg class="skill-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" /></svg><div><b>Tin học cơ bản:</b> Biết sử dụng máy tính, đang tìm hiểu về phần cứng.</div></li>
-              <li><svg class="skill-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg><div><b>An ninh mạng:</b> Đang học các kiến thức nhập môn.</div></li>
-              <li><svg class="skill-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg><div><b>Python:</b> Đang tìm hiểu và học hỏi thêm.</div></li>
-            </ul>
-          </div>
-          <div class="card">
-            <div class="head">
-              <div class="icon-box"><svg class="head-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></div>
-              <h2>Kỹ năng mềm</h2>
-            </div>
-            <ul class="skill-list">
-              <li><svg class="skill-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><div><b>Edit Video:</b> Chỉnh sửa video TikTok/Trend bằng <b>CapCut</b>.</div></li>
-              <li><svg class="skill-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg><div><b>Sáng tạo:</b> Thích quay chụp, bắt trend nhanh.</div></li>
-              <li><svg class="skill-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" /></svg><div><b>Giao tiếp:</b> Tư vấn tuyển sinh, làm việc nhóm.</div></li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="projects">
-        <div class="card">
-          <div class="head">
-            <div class="icon-box"><svg class="head-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></div>
-            <h2>Dự án cá nhân</h2>
-          </div>
-          <div class="grid-2">
-            <a class="project-item" href="https://honggiabao2911.github.io/qua-tang-20.10/" target="_blank">
-              <div class="project-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg></div>
-              <div><span class="tag">Quà tặng</span><h3>🎁 Project 20.10</h3><span>Web quà tặng online với hiệu ứng dễ thương.</span></div>
-            </a>
-            <a class="project-item" href="https://honggiabao2911.github.io/thieptrungthu/" target="_blank">
-              <div class="project-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg></div>
-              <div><span class="tag">Sự kiện</span><h3>🌙 Thiệp Trung Thu</h3><span>Thiệp điện tử giao diện sạch, tối ưu trên điện thoại.</span></div>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="contact">
-        <div class="card">
-          <div class="head">
-            <div class="icon-box"><svg class="head-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></div>
-            <h2>Liên hệ cá nhân</h2>
-          </div>
-          <p>Kết nối trực tiếp với mình:</p>
-          <div class="btn-group">
-            <a href="https://www.facebook.com/share/17YPJnPHDH/" target="_blank" class="btn btn-primary">Facebook</a>
-            <a href="https://zalo.me/0815882673" target="_blank" class="btn btn-primary">Zalo Chat</a>
-            <a href="https://vm.tiktok.com/ZSHwtGHx442dK-eOVQW/" target="_blank" class="btn btn-primary">TikTok</a>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="school">
-        <div class="card">
-          <div class="head">
-            <div class="icon-box"><svg class="head-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg></div>
-            <h2>Đơn vị công tác & Học tập</h2>
-          </div>
-          <p>Hiện tại mình đang theo học ngành <b>An ninh mạng</b> và làm việc tại:</p>
-          <div class="btn-group">
-            <a href="https://ispace.edu.vn/" target="_blank" class="btn btn-outline">🏫 Website iSPACE</a>
-            <a href="https://www.google.com/maps/search/?api=1&query=Tr%C6%B0%E1%BB%9Dng%20Cao%20%C4%91%E1%BA%A3ng%20An%20ninh%20m%E1%BA%A1ng%20iSPACE" target="_blank" class="btn btn-outline">🧭 Chỉ đường</a>
-          </div>
-        </div>
-      </section>
-
-      <footer><p>© <span id="year"></span> Hồng Gia Bảo. All systems operational.</p></footer>
-    </main>
-  </div>
-
-  <script>
-    /* =========================================
-       LOGIC HACKER INTRO (MATRIX OVERLOAD)
-       ========================================= */
-    const outputDiv = document.getElementById('console-output');
-    const terminal = document.getElementById('terminal-screen');
-    const mainContent = document.getElementById('main-content');
-    const crackBox = document.getElementById('password-box');
-    const crackText = document.getElementById('decoding-text');
-    const progressBar = document.getElementById('hack-bar');
-    const progressWrapper = document.getElementById('progress-wrapper');
-
-    const sequence = [
-      { type: 'log', text: "Initializing kernel...", delay: 200 },
-      { type: 'log', text: "Connecting to server 192.168.0.1...", delay: 400 },
-      { type: 'log', text: "Connection established.", delay: 200, color: "text-system" },
-      { type: 'log', text: "Scanning Ports...", delay: 500 },
-      { type: 'log', text: "Open ports: 80, 443, 22.", delay: 300 },
-      { type: 'log', text: "SSH Handshake...", delay: 400 },
-      { type: 'bar', duration: 1500 }, // Thanh chạy
-      
-      // CODE DUMP (Chạy tràn màn hình)
-      { type: 'code-dump', count: 120, speed: 5 },
-
-      { type: 'log', text: "Access denied. Root password required.", delay: 300, color: "text-danger" },
-      { type: 'log', text: "Bypassing Security Layer...", delay: 600 },
-      { type: 'log', text: "Injection Successful.", delay: 400, color: "text-system" },
-      { type: 'crack', duration: 2500 }
-    ];
-
-    let seqIndex = 0;
-
-    function runSequence() {
-      if (seqIndex >= sequence.length) return;
-
-      const item = sequence[seqIndex];
-
-      if (item.type === 'log') {
-        const p = document.createElement('span');
-        p.className = 'log-line ' + (item.color || '');
-        p.innerHTML = "> " + item.text;
-        outputDiv.appendChild(p);
-        terminal.scrollTop = terminal.scrollHeight;
-        seqIndex++;
-        setTimeout(runSequence, item.delay);
-      } 
-      else if (item.type === 'bar') {
-        progressWrapper.style.display = 'block';
-        progressBar.style.width = '0%';
-        setTimeout(() => { progressBar.style.transition = `width ${item.duration}ms linear`; progressBar.style.width = '100%'; }, 50);
-        setTimeout(() => { progressWrapper.style.display = 'none'; seqIndex++; runSequence(); }, item.duration + 200);
-      }
-      else if (item.type === 'code-dump') {
-        // Chạy một lượng lớn code rác để tràn màn hình
-        let dumpCount = 0;
-        const dumpInterval = setInterval(() => {
-          const p = document.createElement('span');
-          p.className = 'log-line text-matrix';
-          // Tạo chuỗi hex/binary ngẫu nhiên
-          p.innerText = Math.random().toString(2).substring(2) + " " + Math.random().toString(16).substring(2).toUpperCase();
-          outputDiv.appendChild(p);
-          terminal.scrollTop = terminal.scrollHeight; // Luôn cuộn xuống
-          dumpCount++;
-          if(dumpCount > item.count) {
-             clearInterval(dumpInterval);
-             seqIndex++;
-             runSequence();
-          }
-        }, item.speed);
-      }
-      else if (item.type === 'crack') {
-        startCracking();
-      }
-    }
-
-    function startCracking() {
-      crackBox.style.display = 'block';
-      const targetPassword = "HGB_ADMIN_ACCESS";
-      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&";
-      let iterations = 0;
-      terminal.scrollTop = terminal.scrollHeight;
-
-      const interval = setInterval(() => {
-        let displayStr = "";
-        const crackedLength = Math.floor(iterations / 4); 
-        for (let i = 0; i < targetPassword.length; i++) {
-          if (i < crackedLength) displayStr += targetPassword[i];
-          else displayStr += chars[Math.floor(Math.random() * chars.length)];
-        }
-        crackText.innerText = displayStr;
-        if (crackedLength >= targetPassword.length) {
-          clearInterval(interval);
-          crackText.style.color = "#0f0";
-          crackText.style.textShadow = "0 0 10px #0f0";
-          
-          // Thông báo thành công
-          const successMsg = document.createElement('span');
-          successMsg.className = "log-line text-system";
-          successMsg.style.marginTop = "20px";
-          successMsg.innerText = "> ACCESS GRANTED.";
-          outputDiv.appendChild(successMsg);
-          terminal.scrollTop = terminal.scrollHeight;
-          
-          setTimeout(triggerGlitchAndEnter, 1000);
-        }
-        iterations++;
-      }, 50);
-    }
-
-    function triggerGlitchAndEnter() {
-      terminal.classList.add('glitch-out');
-      setTimeout(() => {
-        terminal.style.display = 'none'; 
-        mainContent.style.display = 'block';
-        window.scrollTo(0, 0); 
-        setTimeout(() => {
-          mainContent.classList.add('visible');
-          startMainEffects(); 
-        }, 50);
-      }, 600);
-    }
-
-    window.onload = runSequence;
-
-
-    /* =========================================
-       2. JS WEB CHÍNH (GIỮ NGUYÊN)
-       ========================================= */
-    function startMainEffects() {
-      document.getElementById("year").innerText = new Date().getFullYear();
-      
-      const toggleBtn = document.getElementById("theme-toggle");
-      const sunIcon = document.getElementById("sun-icon");
-      const moonIcon = document.getElementById("moon-icon");
-      const body = document.body;
-      const savedTheme = localStorage.getItem("theme");
-      if (savedTheme === "dark") {
-        body.classList.add("dark-mode");
-        sunIcon.style.display = "block"; moonIcon.style.display = "none";
-      } else {
-        body.classList.remove("dark-mode");
-        sunIcon.style.display = "none"; moonIcon.style.display = "block";
-      }
-      toggleBtn.addEventListener("click", () => {
-        body.classList.toggle("dark-mode");
-        if (body.classList.contains("dark-mode")) {
-          localStorage.setItem("theme", "dark");
-          sunIcon.style.display = "block"; moonIcon.style.display = "none";
-        } else {
-          localStorage.setItem("theme", "light");
-          sunIcon.style.display = "none"; moonIcon.style.display = "block";
-        }
-      });
-
-      const textElement = document.getElementById("type-text");
-      const phrases = ["Cyber Security Student 🛡️", "Tech Enthusiast 💻", "Video Editor CapCut 🎬", "iSPACE Collaborator 🏫"];
-      let phraseIndex = 0; let charIndex = 0; let isDeleting = false; let typeSpeed = 100;
-      function type() {
-        const currentPhrase = phrases[phraseIndex];
-        if (isDeleting) {
-          textElement.textContent = currentPhrase.substring(0, charIndex - 1);
-          charIndex--; typeSpeed = 50; 
-        } else {
-          textElement.textContent = currentPhrase.substring(0, charIndex + 1);
-          charIndex++; typeSpeed = 100;
-        }
-        if (!isDeleting && charIndex === currentPhrase.length) { isDeleting = true; typeSpeed = 2000; } 
-        else if (isDeleting && charIndex === 0) { isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; typeSpeed = 500; }
-        setTimeout(type, typeSpeed);
-      }
-      type();
-
-      const canvas = document.getElementById("codeBg");
-      const ctx = canvas.getContext("2d");
-      let w, h, drops = [];
-      const chars = "01HGBAO_CYBER_SEC_<>";
-      const fontSize = 14;
-      function initMatrix() {
-        w = canvas.width = window.innerWidth;
-        h = canvas.height = window.innerHeight;
-        const columns = Math.floor(w / fontSize);
-        drops = Array(columns).fill(1);
-      }
-      function drawMatrix() {
-        const style = getComputedStyle(document.body);
-        ctx.fillStyle = style.getPropertyValue('--matrix-bg').trim();
-        ctx.fillRect(0, 0, w, h);
-        ctx.fillStyle = style.getPropertyValue('--matrix-color').trim();
-        ctx.font = fontSize + "px monospace";
-        for (let i = 0; i < drops.length; i++) {
-          const text = chars[Math.floor(Math.random() * chars.length)];
-          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-          if (drops[i] * fontSize > h && Math.random() > 0.98) drops[i] = 0;
-          drops[i]++;
-        }
-        requestAnimationFrame(drawMatrix);
-      }
-      window.addEventListener('resize', initMatrix);
-      initMatrix();
-      drawMatrix();
-
-      const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
-      const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) { entry.target.classList.add('show'); } 
-          else { entry.target.classList.remove('show'); }
-        });
-      }, observerOptions);
-      const hiddenElements = document.querySelectorAll('.section, .hero, footer');
-      hiddenElements.forEach((el) => {
-        el.classList.add('scroll-item');
-        observer.observe(el);
-      });
-    }
-  </script>
+    </section>
+    <section class="projects scene section" id="projects" aria-labelledby="projects-title">
+      <div class="section-label"><span>03 / GÓC THỬ NGHIỆM</span><span>SELECTED PROJECTS / 04</span></div>
+      <div class="section-heading"><h2 id="projects-title" class="build-item" data-kind="type">Một chút code.<br>Một chút <em>cảm xúc.</em></h2><p class="muted build-item" data-kind="type">Những món quà nhỏ trên Internet.<br>Mỗi dự án là một lần thử điều mới.</p></div>
+      <div class="project-grid">
+        <a class="project-card build-item" data-kind="frame" href="https://honggiabao2911.github.io/qua-tang-20.10/" target="_blank" rel="noopener noreferrer" aria-label="Mở dự án Quà tặng 20.10 trong tab mới"><div class="project-art gift"><span class="art-label">A LITTLE GIFT, A LOT OF LOVE.</span><div class="illustration build-item" data-kind="place"><svg viewBox="0 0 500 300" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M250 112c-95-102-119 20 0 0 95-102 119 20 0 0Z"/><path d="m155 136 95-38 95 38-95 39Z"/><path d="m155 136 0 100 95 40 95-40V136M250 175v101M203 117l94 39v100M157 182l93 39 93-39"/></g><path d="M400 75v28m-14-14h28M107 187v20m-10-10h20" fill="none" stroke="currentColor" stroke-width="2"/></svg></div><span class="art-word">for you.</span><span class="project-open"><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></div><div class="project-info build-item" data-kind="type"><div><span class="project-category">01 / WEB QUÀ TẶNG</span><h3>Quà tặng 20.10</h3><p>Một lời nhắn, một bất ngờ dễ thương.</p></div><span class="project-arrow"><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></div></a>
+        <a class="project-card build-item" data-kind="frame" href="https://honggiabao2911.github.io/noel/" target="_blank" rel="noopener noreferrer" aria-label="Mở dự án Noel trong tab mới"><div class="project-art noel"><span class="art-label">A SEASON TO FEEL THE MAGIC.</span><div class="illustration build-item" data-kind="place"><svg viewBox="0 0 500 300" aria-hidden="true"><g stroke="currentColor" fill="none" stroke-width="2"><path d="m250 56-62 76h30l-53 61h38l-54 64h202l-54-64h38l-53-61h30Z"/><path d="M250 257v27M199 149l102 52M204 207l60 50"/><circle cx="117" cy="103" r="3"/><circle cx="370" cy="168" r="4"/><path d="M365 68v20m-10-10h20M126 221v16m-8-8h16"/></g></svg></div><span class="art-word">merry & bright.</span><span class="project-open"><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></div><div class="project-info build-item" data-kind="type"><div><span class="project-category">02 / KHÔNG KHÍ LỄ HỘI</span><h3>Noel</h3><p>Mang một chút Giáng sinh lên màn hình.</p></div><span class="project-arrow"><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></div></a>
+        <a class="project-card build-item" data-kind="frame" href="https://dsalhdsakj.github.io/chucmung/" target="_blank" rel="noopener noreferrer" aria-label="Mở dự án Chúc mừng trong tab mới"><div class="project-art celebrate"><span class="art-label">HERE'S TO YOUR LITTLE BIG MOMENTS.</span><div class="illustration build-item" data-kind="place"><svg viewBox="0 0 500 300" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2"><path d="m178 253 33-128 98 98Z"/><path d="m190 208 53 28m-43-68 76 41M247 135c-5-61 61-28 54-78M284 171c56 14 21-56 80-46M220 110l-23-35m112 116 37 5"/><circle cx="327" cy="77" r="7"/><circle cx="150" cy="134" r="5"/><path d="m361 220 8-12 12 8-8 12ZM155 61l10 16m-13-3 16-10"/></g></svg></div><span class="art-word">hooray!</span><span class="project-open"><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></div><div class="project-info build-item" data-kind="type"><div><span class="project-category">03 / NHỮNG DỊP ĐẶC BIỆT</span><h3>Chúc mừng</h3><p>Gửi niềm vui theo một cách riêng.</p></div><span class="project-arrow"><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></div></a>
+        <a class="project-card build-item" data-kind="frame" href="https://honggiabao2911.github.io/thieptrungthu/" target="_blank" rel="noopener noreferrer" aria-label="Mở dự án Thiệp Trung Thu trong tab mới"><div class="project-art moon"><span class="art-label">UNDER THE SAME MOON.</span><div class="illustration build-item" data-kind="place"><svg viewBox="0 0 500 300" aria-hidden="true"><g stroke="currentColor" fill="none" stroke-width="2"><circle cx="250" cy="160" r="83"/><circle cx="250" cy="160" r="70" stroke-dasharray="2 9"/><path d="M259 97a64 64 0 1 0 51 94 61 61 0 0 1-51-94ZM117 47v82m-18 0h36v47H99zm18 47v19M380 30v56m-20 0h40v56h-40zm20 56v20"/></g></svg></div><span class="art-word">đêm trăng.</span><span class="project-open"><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></div><div class="project-info build-item" data-kind="type"><div><span class="project-category">04 / THIỆP ĐIỆN TỬ</span><h3>Thiệp Trung Thu</h3><p>Một lời chúc dưới ánh trăng rằm.</p></div><span class="project-arrow"><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></div></a>
+      </div>
+    </section>
+    <section class="school scene section" id="school" aria-labelledby="school-title"><div class="section-label"><span>04 / NƠI MÌNH ĐANG LỚN LÊN</span><span>LEARN. CONNECT. GROW.</span></div><div class="school-grid"><div class="school-mark build-item" data-kind="frame">iSPACE<span>AN NINH MẠNG</span></div><div class="build-item" data-kind="type"><h2 id="school-title">Học hỏi hôm nay.<br><em>Vững bước ngày mai.</em></h2><p class="muted">Mình đang theo học ngành An ninh mạng và là cộng tác viên tuyển sinh tại Trường Cao đẳng An ninh mạng iSPACE.</p><div class="school-links"><a class="text-link" href="https://ispace.edu.vn/" target="_blank" rel="noopener noreferrer">Website iSPACE <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a><a class="text-link" href="https://www.google.com/maps/search/?api=1&query=Tr%C6%B0%E1%BB%9Dng%20Cao%20%C4%91%E1%BA%B3ng%20An%20ninh%20m%E1%BA%A1ng%20iSPACE" target="_blank" rel="noopener noreferrer">Chỉ đường <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a></div></div></div></section>
+    <section class="contact scene section" id="contact" aria-labelledby="contact-title"><div class="section-label"><span>05 / GIỮ KẾT NỐI</span><span><i class="status-dot"></i> SAY HELLO</span></div><div class="contact-grid"><div><p class="eyebrow build-item" data-kind="type">MỘT CUỘC TRÒ CHUYỆN CÓ THỂ LÀ KHỞI ĐẦU.</p><h2 id="contact-title" class="build-item" data-kind="type">Có cùng<br><em>tần số?</em><span class="accent"><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></h2><p class="muted build-item" data-kind="type">Nói về công nghệ, chia sẻ ý tưởng,<br>hay đơn giản là chào nhau một tiếng.</p></div><div class="social-links"><a class="build-item" data-kind="align" href="https://www.facebook.com/share/17YPJnPHDH/" target="_blank" rel="noopener noreferrer"><span><small>01 / KẾT NỐI</small>Facebook</span><span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a><a class="build-item" data-kind="align" href="https://zalo.me/0815882673" target="_blank" rel="noopener noreferrer"><span><small>02 / TRÒ CHUYỆN</small>Zalo Chat</span><span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a><a class="build-item" data-kind="align" href="https://vm.tiktok.com/ZSHwtGHx442dK-eOVQW/" target="_blank" rel="noopener noreferrer"><span><small>03 / GÓC SÁNG TẠO</small>TikTok</span><span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a><span class="contact-confirm mono">✓ RẤT VUI ĐƯỢC BIẾT BẠN.</span></div></div></section>
+  </main>
+  <footer><a class="footer-brand" href="#home">HB.</a><span>© <span id="year">2026</span> Hồng Gia Bảo.<br><span class="muted">Được tạo nên từ sự tò mò.</span></span><a href="#home">VỀ ĐẦU TRANG ↑</a></footer>
+  <aside hidden class="experience-controls" aria-label="Điều khiển hiệu ứng"><span class="control-led" aria-hidden="true"></span><button id="effects-toggle" aria-pressed="true">Hiệu ứng dựng web <span id="effects-state">Bật</span></button><span class="control-divider"></span><button id="replay" aria-label="Dựng lại hiệu ứng từ đầu trang">↻ <span>Dựng lại</span></button><span class="scroll-progress" aria-hidden="true"></span></aside>
+  <div class="sr-only" id="announcement" aria-live="polite"></div>
 </body>
 </html>
