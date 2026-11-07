@@ -11,7 +11,7 @@
   document.body.prepend(background, halo);
   const canvas = background.querySelector('canvas');
   const ctx = canvas.getContext('2d');
-  let width = 0, height = 0, nodes = [], raf = 0, last = 0, previous = 0;
+  let width = 0, height = 0, nodes = [], last = 0, previous = 0;
   let pointer = { x: -500, y: -500 }, pointerDirty = false;
   const alive = () => !reduced.matches && !document.body.classList.contains('effects-off');
   const interactive = () => alive() && fine.matches;
@@ -28,7 +28,6 @@
     }));
   }
   function draw(now) {
-    raf = 0;
     if (!alive() || document.hidden) return;
     if (now - last > 33) {
       const step = previous ? Math.min((now - previous) / 16.67, 3) : 1;
@@ -56,13 +55,9 @@
         pointerDirty = false;
       }
     }
-    raf = requestAnimationFrame(draw);
-  }
-  function start() {
-    if (!raf && alive() && !document.hidden) { previous = 0; raf = requestAnimationFrame(draw); }
   }
   function syncMode() {
-    cancelAnimationFrame(raf); raf = 0;
+    previous = 0;
     background.hidden = !alive();
     halo.hidden = !interactive();
     if (!alive()) {
@@ -73,7 +68,6 @@
       });
       document.querySelectorAll('.glitch-once').forEach(el => el.classList.remove('glitch-once'));
     }
-    start();
   }
   const title = document.querySelector('h1');
   title.dataset.text = title.textContent;
@@ -148,4 +142,5 @@
   document.addEventListener('visibilitychange', syncMode);
   window.addEventListener('resize', resize, { passive: true });
   resize(); syncMode();
+  window.PortfolioMotion?.subscribe(draw);
 })();

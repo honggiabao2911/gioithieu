@@ -20,6 +20,7 @@ const base = process.env.BASE_URL || 'http://127.0.0.1:8000';
   await page.mouse.move(10, 10);
   await page.waitForTimeout(350);
   assert.equal(await art.evaluate(el => el.style.getPropertyValue('--tilt-y')), '0deg');
+  await page.locator('#swarm-controls summary').click();
   await page.locator('#effects-toggle').click();
   assert.equal(await page.locator('.ambient-background').getAttribute('hidden'), '');
   await art.hover();

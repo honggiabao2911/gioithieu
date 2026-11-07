@@ -2,34 +2,43 @@ const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 const base = process.env.BASE_URL || 'http://127.0.0.1:8000';
 (async () => {
-  const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox'] });
-  for (const width of [1440, 390]) {
-    const page = await browser.newPage({ viewport: { width, height: 900 } });
-    const errors = [];
-    page.on('pageerror', error => errors.push(error.message));
-    await page.goto(base, { waitUntil: 'networkidle' });
-    const visibleCursors = () => page.locator('.virtual-cursor').evaluateAll(cursors => cursors.filter(cursor => {
-      const r = cursor.getBoundingClientRect();
-      return !cursor.closest('[hidden]') && Number(getComputedStyle(cursor).opacity) > .9 && r.left >= 0 && r.left < innerWidth && r.top >= 0 && r.top + 35 < innerHeight;
-    }).length);
-    assert.equal(await visibleCursors(), 6, `six visible cursors on entry at ${width}px`);
-    assert.ok(await page.locator('#home .virtual-cursor svg').first().evaluate(el => el.getBoundingClientRect().width) >= 25);
-    await page.waitForTimeout(500);
-    assert.equal(await visibleCursors(), 6, 'cursors do not disappear while pausing');
-    for (const y of [60, 120, 180, 240]) {
-      await page.evaluate(y => scrollTo({ top: y, behavior: 'instant' }), y);
-      await page.waitForTimeout(40);
-      assert.ok(await visibleCursors() >= 6, `collaboration remains visible at scroll ${y} on ${width}px`);
-    }
-    await page.locator('#effects-toggle').click();
-    assert.equal(await visibleCursors(), 0);
-    await page.locator('#replay').click();
-    await page.waitForTimeout(60);
-    assert.equal(await visibleCursors(), 6, 'replay enables effects and shows the team');
-    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
-    assert.deepEqual(errors, []);
-    await page.close();
-  }
-  await browser.close();
-  console.log('PASS: six large cursors visible on entry, pause and scroll; replay from effects-off; desktop and mobile.');
-})().catch(error => { console.error(error); process.exit(1); });
+ const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', args: ['--no-sandbox'] });
+ const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+ const errors = []; page.on('pageerror', e => errors.push(e.message));
+ await page.goto(base, { waitUntil: 'networkidle' });
+ assert.equal(await page.locator('.living-cursor').count(), 10);
+ const positions = () => page.locator('.living-cursor').evaluateAll(es => es.slice(0, 7).map(e => { const r = e.getBoundingClientRect(); return { x: r.x, y: r.y }; }));
+ const mean = ps => ps.reduce((n, p) => n + p.x, 0) / ps.length;
+ await page.mouse.move(1150, 320); await page.waitForTimeout(1800); const right = await positions();
+ assert.ok(await page.locator('.living-cursor[data-state="follow"]').count() >= 6);
+ await page.mouse.move(250, 450); await page.waitForTimeout(1800); const left = await positions();
+ assert.ok(mean(right) - mean(left) > 100, 'the flock actually follows a changed pointer position');
+ await page.waitForFunction(() => document.querySelector('.swarm-layer').dataset.mode === 'idle', null, { timeout: 6000 });
+ const serial = Number(await page.locator('.swarm-layer').getAttribute('data-task-serial') || 0);
+ await page.waitForFunction(() => Number(document.querySelector('.swarm-layer').dataset.completed || 0) >= 1, null, { timeout: 25000 });
+ await page.waitForFunction(n => Number(document.querySelector('.swarm-layer').dataset.taskSerial) > n + 1, serial, { timeout: 25000 });
+ assert.equal(await page.evaluate(() => scrollY), 0, 'new tasks occur without scrolling');
+ await page.mouse.move(800, 520); await page.waitForTimeout(150);
+ assert.equal(await page.locator('.swarm-layer').getAttribute('data-mode'), 'follow');
+ assert.equal(await page.locator('.living-cursor[data-state="work"]').count(), 0, 'work yields to user movement');
+ await page.locator('#chat-launcher').click(); await page.locator('#chat-input').fill('hello'); await page.waitForTimeout(150);
+ assert.equal(await page.locator('.swarm-layer').getAttribute('data-mode'), 'yield');
+ await page.locator('#chat-close').click();
+ const before = await page.locator('.swarm-layer').getAttribute('data-clock');
+ await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, value: true }); document.dispatchEvent(new Event('visibilitychange')); });
+ await page.waitForTimeout(200);
+ assert.equal(await page.locator('.swarm-layer').getAttribute('data-clock'), before, 'clock pauses while document is hidden');
+ await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, value: false }); document.dispatchEvent(new Event('visibilitychange')); });
+ await page.waitForTimeout(100);
+ assert.ok(Number(await page.locator('.swarm-layer').getAttribute('data-clock')) - Number(before) < .3);
+ for (const y of [2200,500,4000,0]) { await page.evaluate(y => scrollTo({ top: y, behavior: 'instant' }), y); await page.waitForTimeout(60); }
+ await page.setViewportSize({ width: 390, height: 844 }); await page.waitForTimeout(100);
+ assert.equal(await page.locator('.living-cursor').count(), 4);
+ const touchContext = await browser.newContext({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 844 } });
+ const touch = await touchContext.newPage(); await touch.goto(base);
+ await touch.touchscreen.tap(180, 250); await touch.waitForTimeout(150);
+ assert.ok(await touch.locator('.living-cursor[data-state=follow]').count() >= 2);
+ assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+ assert.deepEqual(errors, []); await browser.close();
+ console.log('PASS: flock follows/reverses, continuous idle tasks without scroll, user interruption, typing yield, hidden-tab pause, fast scroll, mobile density.');
+})().catch(e => { console.error(e); process.exit(1); });
