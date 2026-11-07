@@ -22,7 +22,7 @@ function completelyBlack(buffer,label){
   assert.equal(await page.locator('#hero-title').evaluate(e=>getComputedStyle(e).visibility),'hidden');
   assert.equal(await page.locator('#chat-launcher').evaluate(e=>getComputedStyle(e).visibility),'hidden');
   completelyBlack(await page.screenshot({fullPage:true,style:'.swarm-layer{visibility:hidden!important}'}),'without active cursor strokes, the actual document remains completely black after the overlay is gone');
-  await page.clock.runFor(4500);
+  await page.clock.runFor(3000);
   const titleQ=Number(await page.locator('#hero-title').evaluate(e=>e.style.getPropertyValue('--reveal')));
   assert.ok(titleQ>0&&titleQ<1,'the name is only partially written, not shown in one frame');
   assert.equal(await page.locator('.portrait-image').getAttribute('data-build-state'),'waiting','the picture is a separate job after its frame');
@@ -35,8 +35,8 @@ function completelyBlack(buffer,label){
   completelyBlack(await page.screenshot({style:'.swarm-layer,.construction-ui{visibility:hidden!important}'}),'a new unbuilt viewport is black, not filled with preset project surfaces');
   await context.close();
  }
- const legacy=await browser.newPage();await legacy.addInitScript(()=>localStorage.setItem('hb-display-v6',JSON.stringify({enabled:true,follow:true,speed:'quick',activity:'light'})));
- await legacy.goto(base);assert.equal(await legacy.locator('#build-speed').inputValue(),'slow');assert.equal(await legacy.locator('#follow-pointer').isChecked(),false,'old flying cursors are not carried into the new construction experience');
+ const legacy=await browser.newPage();await legacy.addInitScript(()=>localStorage.setItem('hb-display-v9',JSON.stringify({enabled:true,follow:true,speed:'quick',activity:'light'})));
+ await legacy.goto(base);assert.equal(await legacy.locator('.living-cursor').count(),5,'upgrading a stored light setting uses the new five-cursor default');assert.equal(await legacy.locator('#build-speed').inputValue(),'slow');assert.equal(await legacy.locator('#follow-pointer').isChecked(),false,'old flying cursors are not carried into the new construction experience');
  assert.deepEqual(errors,[]);await browser.close();
  console.log('PASS: pixel-verified black whole document before and after intro, black future viewport, incremental text, frame before image, desktop/mobile, stable layout and migration of old flying cursors.');
 })().catch(e=>{console.error(e);process.exit(1)});

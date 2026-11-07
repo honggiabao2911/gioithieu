@@ -11,11 +11,11 @@
  const buildAssist=document.getElementById('build-assist');
  const tourControls=document.getElementById('tour-controls');
  const tour={phase:'off',until:0,start:0,from:0,target:0,hiddenAt:0};
- try{const current=localStorage.getItem('hb-display-v9'),saved=JSON.parse(current||localStorage.getItem('hb-display-v6')||'null');if(saved){if(typeof saved.enabled==='boolean')settings.enabled=saved.enabled;if(['light','normal','lively'].includes(saved.activity))settings.activity=saved.activity;if(current){if(typeof saved.follow==='boolean')settings.follow=saved.follow;if(['slow','slower','quick'].includes(saved.speed))settings.speed=saved.speed;}}}catch{}
+ try{const current=localStorage.getItem('hb-display-v12'),saved=JSON.parse(current||localStorage.getItem('hb-display-v9')||localStorage.getItem('hb-display-v6')||'null');if(saved){if(typeof saved.enabled==='boolean')settings.enabled=saved.enabled;if(current){if(['light','normal','lively'].includes(saved.activity))settings.activity=saved.activity;if(typeof saved.follow==='boolean')settings.follow=saved.follow;if(['slow','slower','quick'].includes(saved.speed))settings.speed=saved.speed;}}}catch{}
  let width=innerWidth,height=innerHeight,agents=[],items=[],raf=0,previous=0,dirty=true,clock=0,lastPointer=-100;
  let pointer={x:width/2,y:height/2,known:false},keyboardNavigation=false;const subscribers=new Set();
  const on=()=>settings.enabled&&!reduced.matches;
- function save(){try{localStorage.setItem('hb-display-v9',JSON.stringify(settings));}catch{}}
+ function save(){try{localStorage.setItem('hb-display-v12',JSON.stringify(settings));}catch{}}
  function finish(item){item.done=true;item.q=1;item.owner=null;item.el.dataset.buildState='done';item.el.classList.remove('scroll-building');item.el.style.removeProperty('--reveal');item.el.style.removeProperty('clip-path');}
  function geometry(el){let x=0,y=0,node=el;while(node){x+=node.offsetLeft;y+=node.offsetTop;node=node.offsetParent;}return{x,y,w:el.offsetWidth,h:el.offsetHeight};}
  function textLines(item){
@@ -30,7 +30,7 @@
   lines.sort((a,b)=>a.top-b.top);item.lines=lines.length?lines:[{left:0,right:item.box.w,top:0,bottom:item.box.h,mid:item.box.h/2}];item.lineWidth=item.box.w;return item.lines;
  }
  function cache(){items.forEach(item=>{item.box=geometry(item.el);});dirty=false;}
- function density(){return width<640?{light:2,normal:2,lively:3}[settings.activity]:{light:3,normal:4,lively:6}[settings.activity];}
+ function density(){return width<640?{light:2,normal:2,lively:3}[settings.activity]:{light:3,normal:5,lively:6}[settings.activity];}
  function resize(){width=innerWidth;height=innerHeight;const r=Math.min(devicePixelRatio||1,1.5);canvas.width=width*r;canvas.height=height*r;ctx?.setTransform(r,0,0,r,0,0);items.forEach(i=>{i.owner=null;});agents.forEach(a=>a.el.remove());agents=[];
   for(let i=0;i<density();i++){const el=document.createElement('div');el.className='virtual-cursor living-cursor';el.style.color=colors[i];el.innerHTML='<svg viewBox="0 0 24 30"><path d="M2 2v23l6-6 5 10 5-3-5-9h9Z"/></svg><span><b></b></span>';layer.append(el);agents.push({el,id:i,x:width/2,y:height/2,vx:0,vy:0});}
   document.getElementById('team-count').textContent=agents.length;dirty=true;schedule();
@@ -44,7 +44,7 @@
   items.sort((a,b)=>{const rank=x=>x.el.id==='hero-title'?0:x.el.classList.contains('portrait')?1:2;return rank(a)-rank(b)||a.order-b.order;});
   items.forEach(i=>{i.el.classList.add('scroll-building');i.el.style.setProperty('--reveal',0);i.el.style.removeProperty('clip-path');i.el.dataset.buildState='waiting';});dirty=true;
  }
- function duration(item){return item.minor?{quick:1.4,slow:2.1,slower:3.5}[settings.speed]:{quick:3.2,slow:6.4,slower:11}[settings.speed];}
+ function duration(item){return item.minor?{quick:1.4,slow:2.1,slower:3.5}[settings.speed]:{quick:3.2,slow:5,slower:11}[settings.speed];}
  function inView(item){const y=item.box.y-scrollY;return y<height*.91&&y+item.box.h>35;}
  function finishVisible(){if(dirty)cache();items.filter(inView).forEach(finish);schedule();}
 
